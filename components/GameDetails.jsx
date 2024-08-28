@@ -1,12 +1,12 @@
 const GameDetails = ({ game }) => {
   return (
-    <div className='p-4 bg-gray-800 text-white rounded-md mt-4'>
+    <div className='p-4 bg-gray-800 text-white  mt-4 w-80 absolute z-10 top-56 right-24'>
       <h2 className='text-xl font-bold'>{game.name}</h2>
       {game.cover && (
         <img
           src={game.cover.url.replace('t_thumb', 't_cover_big')}
           alt={game.name}
-          className='mt-4 mb-4 w-full h-auto'
+          className='mt-4 mb-4 w-50 h-50'
         />
       )}
       <p>

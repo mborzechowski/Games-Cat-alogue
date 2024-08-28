@@ -11,16 +11,16 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
         <img
           src={game.cover.url}
           alt={game.name}
-          className='w-auto'
+          className='w-auto rounded-xl'
           onClick={() => toggleGameDetails(game)}
         />
       )}
       <div className='relative'>
-        <h2 className='text-lg font-semibold mt-2'>{game.name}</h2>
+        <h2 className='text-lg mt-2 mb-2'>{game.name}</h2>
         <div className='relative inline-block'>
           <FontAwesomeIcon
             icon={faSquarePlus}
-            className='icon w-6 h-6 cursor-pointer'
+            className='icon w-6 h-6 cursor-pointer hover:text-red-600'
             onClick={() => toggleMenu(game.id)}
           />
           {isActive && (
@@ -43,7 +43,7 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
         </div>
         <FontAwesomeIcon
           icon={faHeartCirclePlus}
-          className='icon w-6 h-6 cursor-pointer ml-2'
+          className='icon w-6 h-6 cursor-pointer ml-2 hover:text-red-600 '
         />
       </div>
     </div>
