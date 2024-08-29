@@ -1,6 +1,20 @@
 const GameDetails = ({ game }) => {
+  console.log(game);
+
+  const developers =
+    game.involved_companies
+      .filter((company) => company.developer)
+      .map((company) => company.company.name)
+      .join(', ') || 'Unknown';
+
+  const publishers =
+    game.involved_companies
+      .filter((company) => company.publisher)
+      .map((company) => company.company.name)
+      .join(', ') || 'Unknown';
+
   return (
-    <div className='p-4 bg-gray-800 text-white  mt-4 w-80 absolute z-10 top-56 right-24'>
+    <div className='p-4 bg-balck text-white  mt-4 w-80 absolute z-10 top-56 right-24 border-2 border-red-700'>
       <h2 className='text-xl font-bold'>{game.name}</h2>
       {game.cover && (
         <img
@@ -10,13 +24,16 @@ const GameDetails = ({ game }) => {
         />
       )}
       <p>
-        <strong>Release Date:</strong> {game.releaseDate || 'Unknown'}
+        <strong>First Release:</strong>{' '}
+        {game.release_dates && game.release_dates.length > 0
+          ? game.release_dates[0].human
+          : 'Unknown'}
       </p>
       <p>
-        <strong>Developer:</strong> {game.developer || 'Unknown'}
+        <strong>Developer:</strong> {developers}
       </p>
       <p>
-        <strong>Publisher:</strong> {game.publisher || 'Unknown'}
+        <strong>Publisher:</strong> {publishers}
       </p>
       <p>
         <strong>Genres:</strong>{' '}

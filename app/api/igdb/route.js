@@ -8,7 +8,7 @@ export async function POST(request) {
 
         const response = await axios.post(
             'https://api.igdb.com/v4/games',
-            `search "${query}"; fields name,cover.url,genres.name,platforms.name;`,
+            `search "${query}"; fields name, cover.url, genres.name, platforms.name, release_dates.human, involved_companies.company.name, involved_companies.developer, involved_companies.publisher; limit 20;`,
             {
                 headers: {
                     'Client-ID': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID,
