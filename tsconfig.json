@@ -27,7 +27,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "config/mongodb.js",
-    "app/layout.jsx"
+    "app/layout.jsx",
+    "app/page.jsx"
   ],
   "exclude": ["node_modules"]
 }
