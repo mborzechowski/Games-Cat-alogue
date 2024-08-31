@@ -26,8 +26,8 @@ export async function POST(req) {
             user_id: session.user.id,
             igdb_id,
             title,
-            platforms,  // Ensure platforms are in the format [{ id: Number, name: String }]
-            genres,     // Ensure genres are in the format [{ id: Number, name: String }]
+            platforms,
+            genres,
             cover_image,
             rating,
             personal_notes,
