@@ -19,7 +19,7 @@ const GameList = ({
             toggleGameDetails={toggleGameDetails}
           />
           {activeGameDetails?.id === game.id && (
-            <GameDetails game={activeGameDetails} />
+            <GameDetails game={activeGameDetails} onClose={toggleGameDetails} />
           )}
         </div>
       ))}

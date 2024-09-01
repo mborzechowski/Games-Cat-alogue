@@ -33,6 +33,7 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
             isActive={isActive}
             checkedPlatforms={checkedPlatforms}
             setCheckedPlatforms={setCheckedPlatforms}
+            onClose={() => toggleMenu(game.id)}
           />
         </div>
         <FontAwesomeIcon

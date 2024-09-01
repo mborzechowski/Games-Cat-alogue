@@ -7,6 +7,7 @@ const PlatformMenu = ({
   isActive,
   checkedPlatforms,
   setCheckedPlatforms,
+  onClose,
 }) => {
   const [isCheckingLibrary, setIsCheckingLibrary] = useState(false);
 
@@ -17,11 +18,6 @@ const PlatformMenu = ({
   }, [isActive]);
 
   const checkIfGameInLibrary = async (gameId) => {
-    if (!session) {
-      alert('You need to be logged in to check your library.');
-      return;
-    }
-
     setIsCheckingLibrary(true);
     try {
       const response = await axios.get(
@@ -72,7 +68,16 @@ const PlatformMenu = ({
 
   return (
     isActive && (
-      <div className='absolute left-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10'>
+      <div className='absolute left-0 mt-2 w-56 bg-black border border-red-600 rounded-md shadow-lg z-10 text-red-600'>
+        <div className='flex justify-between'>
+          <p className='text-xl px-2 pb-2'>...</p>
+          <button
+            className='text-red-500 hover:text-red-700 text-lg pr-2'
+            onClick={onClose}
+          >
+            &times;
+          </button>
+        </div>
         {isCheckingLibrary ? (
           <p className='p-2 text-black'>Checking library...</p>
         ) : game.platforms && game.platforms.length > 0 ? (
@@ -81,10 +86,10 @@ const PlatformMenu = ({
             return (
               <div
                 key={platform.id}
-                className={`p-2 ${
+                className={`p-2  ${
                   isAdded
-                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                    : 'hover:bg-gray-100 cursor-pointer text-black'
+                    ? 'bg-gray-900 text-red-700 cursor-not-allowed'
+                    : 'hover:bg-gray-800 cursor-pointer'
                 }`}
                 onClick={() => !isAdded && handlePlatformSelect(platform)}
               >
@@ -93,7 +98,7 @@ const PlatformMenu = ({
             );
           })
         ) : (
-          <p className='p-2 text-black'>No platforms available</p>
+          <p className='p-2'>Unknown</p>
         )}
       </div>
     )

@@ -11,7 +11,7 @@ export async function POST(req) {
         const session = await getServerSession(authOptions);
 
         if (!session || !session.user || !session.user.id) {
-            return new Response(JSON.stringify({ message: 'Please log in to add a game to your library.' }), {
+            return new Response(JSON.stringify({ message: 'Please login to add a game to your library.' }), {
                 status: 401,
                 headers: { 'Content-Type': 'application/json' },
             });
