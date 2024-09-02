@@ -15,7 +15,7 @@ const GameDetails = ({ game, onClose }) => {
 
   return (
     <div className='p-4 bg-black text-white  mt-4 w-80 absolute z-10 top-56 right-24 border-2 border-red-700'>
-      <div className='flex justify-between'>
+      <div className='flex justify-between items-start'>
         <h2 className='text-xl font-bold'>{game.name}</h2>
         <button
           className='text-red-500 hover:text-red-700 text-lg pr-2'

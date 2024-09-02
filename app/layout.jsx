@@ -3,7 +3,7 @@ import NavBar from '@/components/NavBar';
 import AuthProvider from '@/components/AuthProvider';
 
 export const metadata = {
-  title: 'Games Cat-alogue| Catalogue All Games',
+  title: 'Games Cat-a-logue| Catalogue All Games',
   description: 'Catalogue All Your Games',
   keywords: 'games, catalogue',
 };

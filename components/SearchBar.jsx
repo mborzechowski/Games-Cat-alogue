@@ -1,3 +1,5 @@
+import Spinner from '@/components/Spinner';
+
 const SearchBar = ({ query, setQuery, onSearch, loading }) => {
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -15,8 +17,12 @@ const SearchBar = ({ query, setQuery, onSearch, loading }) => {
         placeholder='Search for a game...'
         className='text-white bg-transparent border-red-600 border-b-2 focus:border-red-600 focus:outline-none pl-4'
       />
-      <button onClick={onSearch} disabled={loading} className='text-red-600'>
-        {loading ? 'Searching...' : 'Search'}
+      <button
+        onClick={onSearch}
+        disabled={loading}
+        className='text-red-600 mt-8'
+      >
+        {loading ? <Spinner loading={loading} /> : 'Search'}
       </button>
     </div>
   );
