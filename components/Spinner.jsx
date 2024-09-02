@@ -11,7 +11,7 @@ const Spinner = ({ loading }) => {
       color='#ff0000'
       loading={loading}
       cssOverride={override}
-      size={60}
+      size={100}
       speedMultiplier={1}
     />
   );

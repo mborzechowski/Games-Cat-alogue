@@ -1,16 +1,22 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import Spinner from '@/components/Spinner';
 
 const LibraryList = () => {
   const { data: session, status } = useSession();
   const [games, setGames] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!session || status === 'loading') return;
+    if (!session || status === 'loading') {
+      setLoading(true);
+      return;
+    }
 
     const fetchLibrary = async () => {
+      setLoading(true);
       try {
         const response = await fetch('/api/getLibrary');
         if (!response.ok) {
@@ -21,14 +27,23 @@ const LibraryList = () => {
       } catch (err) {
         console.error('Error fetching library:', err);
         setError('Failed to load library.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchLibrary();
   }, [session, status]);
 
-  if (status === 'loading') {
-    return <div className='text-red-600 mt-96'>Loading...</div>;
+  if (status === 'loading' || loading) {
+    return (
+      <>
+        <h1 className='text-red-600 mt-48 mb-8 text-xl'>Your Library</h1>
+        <div className='flex justify-center items-center mt-24'>
+          <Spinner loading={true} />
+        </div>
+      </>
+    );
   }
 
   if (!session) {
