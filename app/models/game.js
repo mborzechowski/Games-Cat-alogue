@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-
 const UserGameSchema = new mongoose.Schema(
     {
         user_id: {
@@ -36,6 +35,12 @@ const UserGameSchema = new mongoose.Schema(
             enum: ['wishlist', 'loaned', 'for sale', 'owned'],
             default: 'owned',
         },
+        summary: String,
+        category: { type: String },
+        themes: [String],
+        game_modes: [String],
+        player_perspectives: [String],
+        franchises: [String],
         date_added: {
             type: Date,
             default: Date.now,

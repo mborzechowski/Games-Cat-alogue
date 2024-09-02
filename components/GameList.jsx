@@ -1,5 +1,5 @@
 import GameItem from './GameItem';
-import GameDetails from './GameDetails';
+import GameInfo from './GameInfo';
 
 const GameList = ({
   games,
@@ -19,7 +19,7 @@ const GameList = ({
             toggleGameDetails={toggleGameDetails}
           />
           {activeGameDetails?.id === game.id && (
-            <GameDetails game={activeGameDetails} onClose={toggleGameDetails} />
+            <GameInfo game={activeGameDetails} onClose={toggleGameDetails} />
           )}
         </div>
       ))}

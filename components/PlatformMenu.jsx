@@ -52,6 +52,16 @@ const PlatformMenu = ({
         rating: 5,
         personal_notes: 'My notes',
         status: 'owned',
+        summary: game.summary || '',
+        category: game.category || '',
+        themes: game.themes ? game.themes.map((t) => t.name) : [],
+        game_modes: game.game_modes
+          ? game.game_modes.map((mode) => mode.name)
+          : [],
+        player_perspectives: game.player_perspectives
+          ? game.player_perspectives.map((perspective) => perspective.name)
+          : [],
+        franchises: game.franchises ? game.franchises.map((f) => f.name) : [],
       });
 
       if (response.status === 200) {

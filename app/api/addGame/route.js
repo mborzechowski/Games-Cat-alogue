@@ -20,7 +20,12 @@ export async function POST(req) {
         const data = await req.json();
         console.log('Received data:', data);
 
-        const { igdb_id, title, platforms, genres, cover_image, rating, personal_notes, status } = data;
+
+        const {
+            igdb_id, title, platforms, genres, cover_image, rating,
+            personal_notes, status, summary, category, themes,
+            game_modes, player_perspectives, franchises
+        } = data;
 
         const newUserGame = await UserGameSchema.create({
             user_id: session.user.id,
@@ -32,6 +37,13 @@ export async function POST(req) {
             rating,
             personal_notes,
             status,
+            summary,
+            category,
+            themes,
+            game_modes,
+            player_perspectives,
+            franchises,
+
         });
 
         await User.findByIdAndUpdate(
