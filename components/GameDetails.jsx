@@ -1,15 +1,10 @@
 'use client';
 import { useState } from 'react';
 import { LiaEdit } from 'react-icons/lia';
-import { TfiClose } from 'react-icons/tfi';
+import { TfiClose, TfiSave } from 'react-icons/tfi';
+import { FaCheckCircle } from 'react-icons/fa';
 
-const GameDetails = ({
-  game,
-  onClose,
-  onSaveChanges,
-  onAddToList,
-  onAddImage,
-}) => {
+const GameDetails = ({ game, onClose }) => {
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [rating, setRating] = useState(game.rating || '');
@@ -21,11 +16,6 @@ const GameDetails = ({
     setIsSummaryExpanded(!isSummaryExpanded);
   };
 
-  const handleSaveChanges = () => {
-    onSaveChanges(game, { rating });
-    setIsEditing(false);
-  };
-
   const handleAddToList = (listName) => {
     if (selectedLists.includes(listName)) {
       setSelectedLists(selectedLists.filter((list) => list !== listName));
@@ -34,17 +24,28 @@ const GameDetails = ({
     }
   };
 
-  const handleImageUpload = (event) => {
-    setImage(event.target.files[0]);
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
   };
 
+  const handleSave = () => {
+    if (note) {
+      onAddNote(game, note);
+    }
+    if (image) {
+      onAddImage(game, image);
+    }
+    setIsEditing(false);
+    alert('Changes have been saved!');
+  };
   const summaryLimit = 200;
   const shortSummary = game.summary?.substring(0, summaryLimit) + '...';
 
   return (
     <div className='p-4 bg-black text-white mt-4 w-1/2 absolute z-10 top-20 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg'>
       <TfiClose
-        className='text-red-500 hover:text-red-700 text-xl pr-2 float-right'
+        className='text-red-500 hover:text-red-700 pr-2 float-right size-8'
         onClick={onClose}
       />
 
@@ -65,19 +66,6 @@ const GameDetails = ({
           <p>
             <strong>Genres:</strong> {game.genres.map((g) => g.name).join(', ')}
           </p>
-          <p>
-            <strong className={isEditing ? 'text-red-600' : ''}>Rating:</strong>{' '}
-            {isEditing ? (
-              <input
-                type='number'
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-                className='bg-gray-800 text-white p-1 rounded-lg w-20'
-              />
-            ) : (
-              game.rating
-            )}
-          </p>
 
           {game.themes && (
             <p>
@@ -94,6 +82,72 @@ const GameDetails = ({
           <p>
             <strong>Franchises:</strong> {game.franchises.join(', ')}
           </p>
+
+          <p>
+            <strong className={isEditing ? 'text-red-600' : ''}>Rating:</strong>{' '}
+            {isEditing ? (
+              <input
+                type='number'
+                value={rating}
+                onChange={(e) => setRating(e.target.value)}
+                className='bg-black text-white p-1 rounded-lg w-20 border-none'
+              />
+            ) : (
+              game.rating
+            )}
+          </p>
+
+          {isEditing ? (
+            <>
+              <div className=' flex items-center'>
+                <strong className='text-red-600'>Add Note:</strong>
+                <textarea
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  className='w-60  px-2 mt-2 ml-4 h-8 bg-black text-white border-b-2 border-red-600 text-sm '
+                />
+              </div>
+
+              <div className='mt-4 flex items-center'>
+                <strong className='text-red-600 mr-2'>Add Image:</strong>
+                <div className='relative'>
+                  <input
+                    type='file'
+                    onChange={handleImageUpload}
+                    className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+                  />
+                  <button className='cursor-pointer flex items-center bg-gblack text-white px-2 py-1 w-28 text-sm border-b-2 border-red-600'>
+                    Choose file
+                  </button>
+                </div>
+              </div>
+
+              <div className='flex mt-2'>
+                <div className='flex space-x-4 mt-4'>
+                  {['On loan', 'Playing', 'Next in line', 'On sale'].map(
+                    (list) => (
+                      <div
+                        key={list}
+                        className='cursor-pointer flex items-center bg-grey-600 text-white px-2 py-1   w-28 text-sm border-b-2 border-red-600'
+                        onClick={() => handleAddToList(list)}
+                      >
+                        <span>{list}</span>
+                        {selectedLists.includes(list) && (
+                          <FaCheckCircle className='text-red-600 ml-2' />
+                        )}
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+              <TfiSave
+                onClick={handleSave}
+                className=' text-rose-700 cursor-pointer float-right mt-4 size-8'
+              />
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <div className='mt-4'>
@@ -102,7 +156,7 @@ const GameDetails = ({
             <strong>Summary: </strong>
             {isSummaryExpanded ? game.summary : shortSummary}
             {!isSummaryExpanded && (
-              <span className='text-red-500 hover:text-red-700 cursor-pointer text-sm'>
+              <span className='text-red-600 hover:text-red-700 cursor-pointer text-sm'>
                 {' '}
                 Read more
               </span>
@@ -110,79 +164,14 @@ const GameDetails = ({
           </p>
         )}
 
-        {isEditing ? (
-          <>
-            <div className='mt-4'>
-              <strong>Add Note:</strong>
-              <textarea
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className='w-full p-2 mt-2 bg-gray-800 text-white rounded-lg'
-              />
-              <button
-                onClick={() => onAddToList(game, note)}
-                className='mt-2 bg-red-600 text-white px-4 py-1 rounded-lg'
-              >
-                Save Note
-              </button>
-            </div>
-
-            <div className='mt-4'>
-              <strong>Add to List:</strong>
-              {['On loan', 'Playing', 'Next in line', 'On sale'].map((list) => (
-                <label key={list} className='block'>
-                  <input
-                    type='checkbox'
-                    value={list}
-                    onChange={() => handleAddToList(list)}
-                    checked={selectedLists.includes(list)}
-                  />
-                  {list}
-                </label>
-              ))}
-              <button
-                onClick={() => onAddToList(game, selectedLists)}
-                className='mt-2 bg-red-600 text-white px-4 py-1 rounded-lg'
-              >
-                Save List
-              </button>
-            </div>
-
-            <div className='mt-4'>
-              <strong>Upload Image:</strong>
-              <input
-                type='file'
-                onChange={handleImageUpload}
-                className='w-full p-2 mt-2 bg-gray-800 text-white rounded-lg'
-              />
-              <button
-                onClick={() => onAddImage(game, image)}
-                className='mt-2 bg-red-600 text-white px-4 py-1 rounded-lg'
-              >
-                Add Image
-              </button>
-            </div>
-
-            <div className='flex justify-end mt-4'>
-              <button
-                onClick={handleSaveChanges}
-                className='bg-green-500 text-white px-4 py-1 rounded-lg mr-2'
-              >
-                Save
-              </button>
-            </div>
-          </>
-        ) : (
-          <></>
-        )}
-        {isEditing ? (
-          <></>
-        ) : (
-          <LiaEdit
-            onClick={() => setIsEditing(true)}
-            className='text-red-500 hover:text-red-700 text-xl cursor-pointer float-right'
-          />
-        )}
+        <LiaEdit
+          onClick={() => setIsEditing(true)}
+          className={
+            isEditing
+              ? 'text-red-600 hover:text-red-700 float-right size-8 opacity-0'
+              : 'text-red-600 hover:text-red-700 cursor-pointer float-right size-8'
+          }
+        />
       </div>
     </div>
   );

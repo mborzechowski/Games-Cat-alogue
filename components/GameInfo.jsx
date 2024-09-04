@@ -20,7 +20,7 @@ const GameInfo = ({ game, onClose }) => {
       <div className='flex justify-between items-start'>
         <h2 className='text-xl font-bold'>{game.name}</h2>
         <TfiClose
-          className='text-red-500 hover:text-red-700 text-xl pr-2'
+          className='text-red-500 hover:text-red-700 size-8 pr-2'
           onClick={onClose}
         />
       </div>
