@@ -8,12 +8,11 @@ const LibraryList = () => {
   const { data: session, status } = useSession();
   const [games, setGames] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
 
   useEffect(() => {
     if (!session || status === 'loading') {
-      setLoading(true);
       return;
     }
 
@@ -45,27 +44,11 @@ const LibraryList = () => {
     setSelectedGame(null);
   };
 
-  const handleAddToList = (game, lists) => {
-    console.log(`Dodano grę ${game.title} do list: ${lists.join(', ')}`);
-  };
+  if (status === 'loading') {
+    return null;
+  }
 
-  const handleAddNote = (game, note) => {
-    console.log(`Dodano notatkę do gry ${game.title}: ${note}`);
-  };
-
-  const handleAddRating = (game, rating) => {
-    console.log(`Dodano ocenę ${rating} do gry ${game.title}`);
-  };
-
-  const handleDelete = (game) => {
-    console.log(`Usunięto grę ${game.title} z biblioteki`);
-  };
-
-  const handleAddImage = (game, image) => {
-    console.log(`Dodano obrazek do gry ${game.title}`);
-  };
-
-  if (status === 'loading' || loading) {
+  if (loading) {
     return (
       <>
         <h1 className='text-red-600 mt-48 mb-8 text-xl'>Your Library</h1>
@@ -112,15 +95,7 @@ const LibraryList = () => {
         ))}
       </div>
       {selectedGame && (
-        <GameDetails
-          game={selectedGame}
-          onClose={handleCloseDetails}
-          onAddToList={handleAddToList}
-          onAddNote={handleAddNote}
-          onAddRating={handleAddRating}
-          onDelete={handleDelete}
-          onAddImage={handleAddImage}
-        />
+        <GameDetails game={selectedGame} onClose={handleCloseDetails} />
       )}
     </div>
   );
