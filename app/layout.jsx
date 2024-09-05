@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
   return (
     <AuthProvider>
       <html lang='pl'>
-        <body className='flex flex-row min-h-screen'>
+        <body className='flex flex-row min-h-screen font-sans '>
           <NavBar />
           <main className='flex-grow w-full max-w-7xl mx-auto px-8'>
             {children}

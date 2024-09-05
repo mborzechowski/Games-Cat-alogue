@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { FaCheckCircle } from 'react-icons/fa';
 import axios from 'axios';
 
 const PlatformMenu = ({
@@ -49,7 +50,7 @@ const PlatformMenu = ({
         platforms: [platform],
         genres: game.genres.map((g) => ({ id: g.id, name: g.name })),
         cover_image: game.cover.url,
-        rating: 5,
+        rating: 0,
         personal_notes: 'My notes',
         status: 'owned',
         summary: game.summary || '',
@@ -103,7 +104,12 @@ const PlatformMenu = ({
                 }`}
                 onClick={() => !isAdded && handlePlatformSelect(platform)}
               >
-                {platform.name} {isAdded && '✅'}
+                {platform.name}{' '}
+                {isAdded ? (
+                  <FaCheckCircle className='text-red-600 ml-2 float-right' />
+                ) : (
+                  ''
+                )}
               </div>
             );
           })

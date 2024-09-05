@@ -44,6 +44,15 @@ const LibraryList = () => {
     setSelectedGame(null);
   };
 
+  const handleSave = (updatedGame) => {
+    setGames((prevGames) =>
+      prevGames.map((game) =>
+        game._id === updatedGame._id ? updatedGame : game
+      )
+    );
+    setSelectedGame(updatedGame);
+  };
+
   if (status === 'loading') {
     return null;
   }
@@ -95,7 +104,11 @@ const LibraryList = () => {
         ))}
       </div>
       {selectedGame && (
-        <GameDetails game={selectedGame} onClose={handleCloseDetails} />
+        <GameDetails
+          game={selectedGame}
+          onClose={handleCloseDetails}
+          onSave={handleSave}
+        />
       )}
     </div>
   );

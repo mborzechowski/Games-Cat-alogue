@@ -2,15 +2,21 @@
 import { useState } from 'react';
 import { LiaEdit } from 'react-icons/lia';
 import { TfiClose, TfiSave } from 'react-icons/tfi';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaStar } from 'react-icons/fa';
 
-const GameDetails = ({ game, onClose }) => {
+const GameDetails = ({ game, onClose, onSave }) => {
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [currentGame, setCurrentGame] = useState(game);
   const [rating, setRating] = useState(game.rating || '');
   const [note, setNote] = useState('');
   const [selectedLists, setSelectedLists] = useState([]);
   const [image, setImage] = useState(null);
+
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const summaryLimit = 200;
+  const shortSummary = game.summary?.substring(0, summaryLimit) + '...';
 
   const toggleSummary = () => {
     setIsSummaryExpanded(!isSummaryExpanded);
@@ -29,25 +35,68 @@ const GameDetails = ({ game, onClose }) => {
     setImage(file);
   };
 
-  const handleSave = () => {
-    if (note) {
-      onAddNote(game, note);
-    }
-    if (image) {
-      onAddImage(game, image);
-    }
-    setIsEditing(false);
-    alert('Changes have been saved!');
+  const handleRatingClick = (index) => {
+    setRating(index);
   };
-  const summaryLimit = 200;
-  const shortSummary = game.summary?.substring(0, summaryLimit) + '...';
+
+  const handleRatingHover = (index) => {
+    setHoverRating(index);
+  };
+
+  const handleRatingHoverOut = () => {
+    setHoverRating(0);
+  };
+
+  const handleSave = async () => {
+    try {
+      const response = await fetch('/api/updateGame', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gameId: currentGame._id,
+          rating,
+          note,
+          image,
+        }),
+      });
+
+      const updatedGame = await response.json();
+
+      if (response.ok) {
+        setCurrentGame(updatedGame);
+        setIsEditing(false);
+        alert('Changes have been saved!');
+        onSave(updatedGame);
+      } else {
+        alert('Failed to save changes');
+      }
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      alert('An error occurred while saving changes');
+    }
+  };
 
   return (
     <div className='p-4 bg-black text-white mt-4 w-1/2 absolute z-10 top-20 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg'>
-      <TfiClose
-        className='text-red-500 hover:text-red-700 pr-2 float-right size-8'
-        onClick={onClose}
-      />
+      <div className='flex flex-col float-right gap-2 items-end'>
+        <TfiClose
+          className='text-red-600 hover:text-red-700  size-6 mr-2'
+          onClick={onClose}
+        />
+        {isEditing ? (
+          <TfiSave
+            onClick={handleSave}
+            className='text-red-600 hover:text-red-700 size-6 cursor-pointer mt-2 mr-2'
+          />
+        ) : (
+          <LiaEdit
+            onClick={() => setIsEditing(true)}
+            className='text-red-600 hover:text-red-700 cursor-pointer size-8'
+          />
+        )}
+      </div>
 
       <div className='flex mb-4'>
         <div className='w-1/3'>
@@ -83,19 +132,43 @@ const GameDetails = ({ game, onClose }) => {
             <strong>Franchises:</strong> {game.franchises.join(', ')}
           </p>
 
-          <p>
+          <div className='flex items-center gap-4'>
             <strong className={isEditing ? 'text-red-600' : ''}>Rating:</strong>{' '}
             {isEditing ? (
-              <input
-                type='number'
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-                className='bg-black text-white p-1 rounded-lg w-20 border-none'
-              />
+              <div className='flex space-x-1'>
+                {[...Array(10)].map((_, index) => {
+                  const starIndex = index + 1;
+                  return (
+                    <FaStar
+                      key={starIndex}
+                      className={`cursor-pointer ${
+                        starIndex <= (hoverRating || rating)
+                          ? 'text-red-600'
+                          : 'text-gray-500'
+                      }`}
+                      onClick={() => handleRatingClick(starIndex)}
+                      onMouseEnter={() => handleRatingHover(starIndex)}
+                      onMouseLeave={handleRatingHoverOut}
+                    />
+                  );
+                })}
+              </div>
             ) : (
-              game.rating
+              <div className='flex space-x-1'>
+                {[...Array(10)].map((_, index) => {
+                  const starIndex = index + 1;
+                  return (
+                    <FaStar
+                      key={starIndex}
+                      className={`${
+                        starIndex <= rating ? 'text-red-600' : 'text-gray-500'
+                      }`}
+                    />
+                  );
+                })}
+              </div>
             )}
-          </p>
+          </div>
 
           {isEditing ? (
             <>
@@ -104,7 +177,7 @@ const GameDetails = ({ game, onClose }) => {
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  className='w-60  px-2 mt-2 ml-4 h-8 bg-black text-white border-b-2 border-red-600 text-sm '
+                  className='w-60  px-2 mt-2 ml-4 h-8 bg-black text-white border-b-2 border-r-2 rounded-xl border-red-600 text-sm focus:outline-none hover:outline-none resize-none '
                 />
               </div>
 
@@ -116,7 +189,7 @@ const GameDetails = ({ game, onClose }) => {
                     onChange={handleImageUpload}
                     className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
                   />
-                  <button className='cursor-pointer flex items-center bg-gblack text-white px-2 py-1 w-28 text-sm border-b-2 border-red-600'>
+                  <button className='cursor-pointer flex items-center justify-center bg-gblack text-white  w-24 text-sm border-b-2 border-r-2 rounded-xl border-red-600'>
                     Choose file
                   </button>
                 </div>
@@ -128,7 +201,7 @@ const GameDetails = ({ game, onClose }) => {
                     (list) => (
                       <div
                         key={list}
-                        className='cursor-pointer flex items-center bg-grey-600 text-white px-2 py-1   w-28 text-sm border-b-2 border-red-600'
+                        className='cursor-pointer flex items-center justify-between bg-grey-600 text-white px-2 py-1   w-28 text-sm border-b-2 border-r-2 rounded-xl border-red-600'
                         onClick={() => handleAddToList(list)}
                       >
                         <span>{list}</span>
@@ -140,10 +213,6 @@ const GameDetails = ({ game, onClose }) => {
                   )}
                 </div>
               </div>
-              <TfiSave
-                onClick={handleSave}
-                className=' text-rose-700 cursor-pointer float-right mt-4 size-8'
-              />
             </>
           ) : (
             <></>
@@ -152,26 +221,17 @@ const GameDetails = ({ game, onClose }) => {
       </div>
       <div className='mt-4'>
         {game.summary && (
-          <p onClick={toggleSummary} className='cursor-pointer'>
+          <p onClick={toggleSummary} className='cursor-pointer text-justify'>
             <strong>Summary: </strong>
             {isSummaryExpanded ? game.summary : shortSummary}
             {!isSummaryExpanded && (
-              <span className='text-red-600 hover:text-red-700 cursor-pointer text-sm'>
+              <span className='text-red-600 hover:text-red-700 cursor-pointer text-sm text-justify'>
                 {' '}
                 Read more
               </span>
             )}
           </p>
         )}
-
-        <LiaEdit
-          onClick={() => setIsEditing(true)}
-          className={
-            isEditing
-              ? 'text-red-600 hover:text-red-700 float-right size-8 opacity-0'
-              : 'text-red-600 hover:text-red-700 cursor-pointer float-right size-8'
-          }
-        />
       </div>
     </div>
   );
