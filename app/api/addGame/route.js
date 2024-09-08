@@ -24,7 +24,8 @@ export async function POST(req) {
         const {
             igdb_id, title, platforms, genres, cover_image, rating,
             personal_notes, status, summary, category, themes,
-            game_modes, player_perspectives, franchises
+            game_modes, player_perspectives, franchises, developer,
+            publisher, dlc, expansions
         } = data;
 
         const newUserGame = await UserGameSchema.create({
@@ -43,6 +44,10 @@ export async function POST(req) {
             game_modes,
             player_perspectives,
             franchises,
+            developer,
+            publisher,
+            dlc,
+            expansions,
 
         });
 

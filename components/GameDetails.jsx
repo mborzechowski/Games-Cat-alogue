@@ -131,6 +131,12 @@ const GameDetails = ({ game, onClose, onSave }) => {
           <p>
             <strong>Franchises:</strong> {game.franchises.join(', ')}
           </p>
+          <p>
+            <strong>Developer:</strong> {game.developer}
+          </p>
+          <p>
+            <strong>Publisher:</strong> {game.publisher}
+          </p>
 
           <div className='flex items-center gap-4'>
             <strong className={isEditing ? 'text-red-600' : ''}>Rating:</strong>{' '}

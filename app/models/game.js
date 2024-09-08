@@ -41,6 +41,10 @@ const UserGameSchema = new mongoose.Schema(
         game_modes: [String],
         player_perspectives: [String],
         franchises: [String],
+        developer: [String],
+        publisher: [String],
+        dlc: [String],
+        expansions: [String],
         date_added: {
             type: Date,
             default: Date.now,

@@ -62,7 +62,23 @@ const PlatformMenu = ({
         player_perspectives: game.player_perspectives
           ? game.player_perspectives.map((perspective) => perspective.name)
           : [],
-        franchises: game.franchises ? game.franchises.map((f) => f.name) : [],
+        franchises: game.franchises
+          ? game.franchises.map((franchise) => franchise.name)
+          : [],
+        developer: game.involved_companies
+          ? game.involved_companies
+              .filter((company) => company.developer)
+              .map((company) => company.company.name)
+          : [],
+        publisher: game.involved_companies
+          ? game.involved_companies
+              .filter((company) => company.publisher)
+              .map((company) => company.company.name)
+          : [],
+        dlc: game.dlcs ? game.dlcs.map((dlc) => dlc.name) : [],
+        expansions: game.expansions
+          ? game.expansions.map((expansion) => expansion.name)
+          : [],
       });
 
       if (response.status === 200) {
