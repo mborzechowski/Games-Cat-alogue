@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Spinner from '@/components/Spinner';
 import GameDetails from '@/components/GameDetails';
+import { toast } from 'react-toastify';
 
 const LibraryList = () => {
   const { data: session, status } = useSession();
@@ -26,7 +27,7 @@ const LibraryList = () => {
         const data = await response.json();
         setGames(data);
       } catch (err) {
-        console.error('Error fetching library:', err);
+        toast.error('Error fetching library:', err);
         setError('Failed to load library.');
       } finally {
         setLoading(false);

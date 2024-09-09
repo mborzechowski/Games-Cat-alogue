@@ -1,4 +1,5 @@
+import List from '@/components/ListComponent';
 const GameLists = () => {
-  return <div>GameLists</div>;
+  return <List></List>;
 };
 export default GameLists;

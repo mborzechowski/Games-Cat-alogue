@@ -4,6 +4,7 @@ import PlatformMenu from './PlatformMenu';
 import AddToLibraryButton from './AddToLibraryButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeartCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { useAddGameTo } from '@/utils/useAddGameTo';
 
 const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
   const { data: session } = useSession();
@@ -11,6 +12,17 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
 
   const handleIconClick = () => {
     toggleMenu(game.id);
+  };
+
+  const handleAddToWishlist = () => {
+    useAddGameTo(
+      game,
+      session,
+      null,
+      'wishlist',
+      checkedPlatforms,
+      setCheckedPlatforms
+    );
   };
 
   return (
@@ -39,6 +51,7 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
         <FontAwesomeIcon
           icon={faHeartCirclePlus}
           className='icon w-6 h-6 cursor-pointer ml-2 hover:text-red-600'
+          onClick={handleAddToWishlist}
         />
       </div>
     </div>

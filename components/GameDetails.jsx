@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { LiaEdit } from 'react-icons/lia';
 import { TfiClose, TfiSave } from 'react-icons/tfi';
 import { FaCheckCircle, FaStar } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const GameDetails = ({ game, onClose, onSave }) => {
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
@@ -67,14 +68,14 @@ const GameDetails = ({ game, onClose, onSave }) => {
       if (response.ok) {
         setCurrentGame(updatedGame);
         setIsEditing(false);
-        alert('Changes have been saved!');
+        toast.success('Changes have been saved!');
         onSave(updatedGame);
       } else {
-        alert('Failed to save changes');
+        toast.error('Failed to save changes');
       }
     } catch (error) {
       console.error('Error saving changes:', error);
-      alert('An error occurred while saving changes');
+      toast.error('An error occurred while saving changes');
     }
   };
 

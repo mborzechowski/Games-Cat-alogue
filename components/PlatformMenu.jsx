@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useAddGameTo } from '@/utils/useAddGameTo';
 
 const PlatformMenu = ({
   game,
@@ -11,6 +13,7 @@ const PlatformMenu = ({
   onClose,
 }) => {
   const [isCheckingLibrary, setIsCheckingLibrary] = useState(false);
+  const { addGameTo } = useAddGameTo();
 
   useEffect(() => {
     if (isActive) {
@@ -26,71 +29,82 @@ const PlatformMenu = ({
       );
       setCheckedPlatforms(response.data.platforms || []);
     } catch (error) {
-      console.error('Error checking game in library:', error);
+      toast.error('Error checking game in library:', error);
     } finally {
       setIsCheckingLibrary(false);
     }
   };
 
-  const handlePlatformSelect = async (platform) => {
-    if (!session) {
-      alert('You need to be logged in to add a game to your library.');
-      return;
-    }
+  // const handlePlatformSelect = async (platform) => {
+  //   if (!session) {
+  //     toast.warn('You need to be logged in to add a game to your library.');
+  //     return;
+  //   }
 
-    if (checkedPlatforms.includes(platform.id)) {
-      alert('This game is already in your library on this platform.');
-      return;
-    }
+  //   if (checkedPlatforms.includes(platform.id)) {
+  //     toast.warn('This game is already in your library on this platform.');
+  //     return;
+  //   }
 
-    try {
-      const response = await axios.post('/api/addGame', {
-        igdb_id: game.id,
-        title: game.name,
-        platforms: [platform],
-        genres: game.genres.map((g) => ({ id: g.id, name: g.name })),
-        cover_image: game.cover.url,
-        rating: 0,
-        personal_notes: 'My notes',
-        status: 'owned',
-        summary: game.summary || '',
-        category: game.category || '',
-        themes: game.themes ? game.themes.map((t) => t.name) : [],
-        game_modes: game.game_modes
-          ? game.game_modes.map((mode) => mode.name)
-          : [],
-        player_perspectives: game.player_perspectives
-          ? game.player_perspectives.map((perspective) => perspective.name)
-          : [],
-        franchises: game.franchises
-          ? game.franchises.map((franchise) => franchise.name)
-          : [],
-        developer: game.involved_companies
-          ? game.involved_companies
-              .filter((company) => company.developer)
-              .map((company) => company.company.name)
-          : [],
-        publisher: game.involved_companies
-          ? game.involved_companies
-              .filter((company) => company.publisher)
-              .map((company) => company.company.name)
-          : [],
-        dlc: game.dlcs ? game.dlcs.map((dlc) => dlc.name) : [],
-        expansions: game.expansions
-          ? game.expansions.map((expansion) => expansion.name)
-          : [],
-      });
+  //   try {
+  //     const response = await axios.post('/api/addGame', {
+  //       igdb_id: game.id,
+  //       title: game.name,
+  //       platforms: [platform],
+  //       genres: game.genres.map((g) => ({ id: g.id, name: g.name })),
+  //       cover_image: game.cover.url,
+  //       rating: 0,
+  //       personal_notes: 'My notes',
+  //       lists: '',
+  //       summary: game.summary || '',
+  //       category: game.category || '',
+  //       themes: game.themes ? game.themes.map((t) => t.name) : [],
+  //       game_modes: game.game_modes
+  //         ? game.game_modes.map((mode) => mode.name)
+  //         : [],
+  //       player_perspectives: game.player_perspectives
+  //         ? game.player_perspectives.map((perspective) => perspective.name)
+  //         : [],
+  //       franchises: game.franchises
+  //         ? game.franchises.map((franchise) => franchise.name)
+  //         : [],
+  //       developer: game.involved_companies
+  //         ? game.involved_companies
+  //             .filter((company) => company.developer)
+  //             .map((company) => company.company.name)
+  //         : [],
+  //       publisher: game.involved_companies
+  //         ? game.involved_companies
+  //             .filter((company) => company.publisher)
+  //             .map((company) => company.company.name)
+  //         : [],
+  //       dlc: game.dlcs ? game.dlcs.map((dlc) => dlc.name) : [],
+  //       expansions: game.expansions
+  //         ? game.expansions.map((expansion) => expansion.name)
+  //         : [],
+  //     });
 
-      if (response.status === 200) {
-        alert('Game added to library successfully.');
-        setCheckedPlatforms([...checkedPlatforms, platform.id]);
-      } else {
-        alert('Failed to add game to library.');
-      }
-    } catch (error) {
-      console.error('Error adding game to library:', error);
-      alert('Failed to add game to library.');
-    }
+  //     if (response.status === 200) {
+  //       toast.info('Game added to library successfully.');
+  //       setCheckedPlatforms([...checkedPlatforms, platform.id]);
+  //     } else {
+  //       toast.error('Failed to add game to library.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding game to library:', error);
+  //     toast.error('Failed to add game to library.');
+  //   }
+  // };
+
+  const handlePlatformSelect = (platform) => {
+    addGameTo(
+      game,
+      session,
+      platform,
+      'library',
+      checkedPlatforms,
+      setCheckedPlatforms
+    );
   };
 
   return (

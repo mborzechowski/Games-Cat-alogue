@@ -30,11 +30,10 @@ const UserGameSchema = new mongoose.Schema(
             max: 10,
         },
         personal_notes: String,
-        status: {
+        lists: [{
             type: String,
-            enum: ['wishlist', 'loaned', 'for sale', 'owned'],
-            default: 'owned',
-        },
+            enum: ['on loan', 'playing', 'next in line', 'on sale', 'wishlist'],
+        }],
         summary: String,
         category: { type: String },
         themes: [String],

@@ -23,7 +23,7 @@ export async function POST(req) {
 
         const {
             igdb_id, title, platforms, genres, cover_image, rating,
-            personal_notes, status, summary, category, themes,
+            personal_notes, lists, summary, category, themes,
             game_modes, player_perspectives, franchises, developer,
             publisher, dlc, expansions
         } = data;
@@ -37,7 +37,7 @@ export async function POST(req) {
             cover_image,
             rating,
             personal_notes,
-            status,
+            lists,
             summary,
             category,
             themes,
