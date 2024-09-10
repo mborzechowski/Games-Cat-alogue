@@ -14,7 +14,7 @@ export async function POST(request) {
            involved_companies.publisher, summary, category, themes.name,
            game_modes.name, player_perspectives.name, franchises.name,
            dlcs, expansions;  
-    where category = (0, 4, 8, 9, 10);
+    where category = (0, 4, 8, 9, 10, 11);
     limit 20;`,
             {
                 headers: {

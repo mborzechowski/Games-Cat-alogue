@@ -25,12 +25,18 @@ const NavBar = () => {
             height={40}
             alt='profile picture'
           ></Image>
-          <button onClick={() => signOut()} className='ml-4 text-red-600'>
+          <button
+            onClick={() => signOut()}
+            className='ml-4 text-red-600 hover:text-white'
+          >
             Logout
           </button>
         </div>
       ) : (
-        <button onClick={() => signIn()} className='mr-8 mt-40'>
+        <button
+          onClick={() => signIn()}
+          className='mr-8 mt-40 hover:text-red-600'
+        >
           Login
         </button>
       )}

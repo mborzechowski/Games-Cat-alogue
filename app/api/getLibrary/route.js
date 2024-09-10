@@ -1,8 +1,10 @@
 import connectDB from '@/config/mongodb';
 import User from '@/app/models/user';
-import UserGame from '@/app/models/game';
+import Game from '@/app/models/game';
+
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
+import game from '@/app/models/game';
 
 export async function GET(req) {
     try {
@@ -17,8 +19,8 @@ export async function GET(req) {
             });
         }
 
-        // Find user and populate their library with game details
-        const user = await User.findById(session.user.id).populate('library');
+
+        const user = await User.findById(session.user.id).exec();
 
         if (!user) {
             return new Response(JSON.stringify({ message: 'User not found.' }), {
@@ -27,7 +29,23 @@ export async function GET(req) {
             });
         }
 
-        return new Response(JSON.stringify(user.library), {
+        const url = new URL(req.url);
+        const whislistParam = url.searchParams.get('whislist');
+        const whislist = whislistParam === 'true';
+
+        const gamesQuery = {
+            _id: { $in: user.library }
+        };
+
+        if (!whislist) {
+            gamesQuery['lists'] = { $ne: 'whislist' }
+        } else {
+            gamesQuery['lists'] = 'whislist'
+        }
+
+        const library = await Game.find(gamesQuery).exec();
+
+        return new Response(JSON.stringify(library), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });

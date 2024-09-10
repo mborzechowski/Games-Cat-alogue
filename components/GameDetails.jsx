@@ -204,7 +204,7 @@ const GameDetails = ({ game, onClose, onSave }) => {
 
               <div className='flex mt-2'>
                 <div className='flex space-x-4 mt-4'>
-                  {['On loan', 'Playing', 'Next in line', 'On sale'].map(
+                  {['Next in line', 'On loan', 'On hold', 'On sale'].map(
                     (list) => (
                       <div
                         key={list}

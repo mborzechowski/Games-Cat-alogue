@@ -20,7 +20,7 @@ const LibraryList = () => {
     const fetchLibrary = async () => {
       setLoading(true);
       try {
-        const response = await fetch('/api/getLibrary');
+        const response = await fetch('/api/getLibrary?whislist=false');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
