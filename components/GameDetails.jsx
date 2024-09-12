@@ -80,7 +80,7 @@ const GameDetails = ({ game, onClose, onSave }) => {
   };
 
   return (
-    <div className='p-4 bg-black text-white mt-4 w-1/2 absolute z-10 top-20 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg'>
+    <div className='p-4 bg-black text-white mt-4 h-2/3 w-2/3 absolute z-10 top-44 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg'>
       <div className='flex flex-col float-right gap-2 items-end'>
         <TfiClose
           className='text-red-600 hover:text-red-700  size-6 mr-2'
@@ -100,7 +100,7 @@ const GameDetails = ({ game, onClose, onSave }) => {
       </div>
 
       <div className='flex mb-4'>
-        <div className='w-1/3'>
+        <div className='w-1/4'>
           <img
             src={game.cover_image.replace('t_thumb', 't_cover_big')}
             alt={game.title}
