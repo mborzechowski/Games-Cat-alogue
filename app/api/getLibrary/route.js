@@ -29,7 +29,7 @@ export async function GET(req) {
             });
         }
 
-        const url = new URL(req.url);
+        const url = new URL(req.url, `http://${req.headers.host}`);
         const whislistParam = url.searchParams.get('whislist');
         const whislist = whislistParam === 'true';
 

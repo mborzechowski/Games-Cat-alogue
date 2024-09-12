@@ -18,7 +18,7 @@ export async function POST(request) {
     limit 20;`,
             {
                 headers: {
-                    'Client-ID': process.env.TWITCH_CLIENT_ID,
+                    'Client-ID': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID,
                     Authorization: `Bearer ${accessToken}`,
                     'Content-Type': 'text/plain',
                 },
@@ -46,7 +46,7 @@ const getAccessToken = async () => {
         const response = await axios.post(
             'https://id.twitch.tv/oauth2/token',
             new URLSearchParams({
-                client_id: process.env.TWITCH_CLIENT_ID,
+                client_id: process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID,
                 client_secret: process.env.TWITCH_CLIENT_SECRET,
                 grant_type: 'client_credentials',
             }).toString(),

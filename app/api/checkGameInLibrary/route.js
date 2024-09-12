@@ -16,8 +16,8 @@ export async function GET(req) {
             });
         }
 
-        const { searchParams } = new URL(req.url);
-        const igdb_id = searchParams.get('igdb_id');
+        const url = new URL(req.url, `http://${req.headers.host}`);
+        const igdb_id = url.searchParams.get('igdb_id');
 
         if (!igdb_id) {
             return new Response(JSON.stringify({ platforms: [] }), {
