@@ -4,10 +4,14 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
 
 export async function GET(req) {
+
     try {
         await connectDB();
 
+        console.log('Przed wywołaniem getServerSession');
         const session = await getServerSession(authOptions);
+        console.log('Po wywołaniu getServerSession, session:', session);
+
 
         if (!session || !session.user || !session.user.id) {
             return new Response(JSON.stringify({ platforms: [] }), {
@@ -16,7 +20,8 @@ export async function GET(req) {
             });
         }
 
-        const url = new URL(req.url, `http://${req.headers.host}`);
+        const host = req.headers.host || 'defaultHost';
+        const url = new URL(req.url, `http://${host}`);
         const igdb_id = url.searchParams.get('igdb_id');
 
         if (!igdb_id) {

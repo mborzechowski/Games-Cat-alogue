@@ -1,10 +1,9 @@
 import connectDB from '@/config/mongodb';
 import User from '@/app/models/user';
 import Game from '@/app/models/game';
-
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
-import game from '@/app/models/game';
+
 
 export async function GET(req) {
     try {
