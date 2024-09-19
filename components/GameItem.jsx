@@ -24,10 +24,7 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
       const response = await axios.post('/api/addGame', {
         igdb_id: game.id,
         title: game.name,
-        platforms: game.platforms.map((platform) => ({
-          id: platform.id,
-          name: platform.name,
-        })),
+        platforms: [],
         genres: game.genres.map((g) => ({ id: g.id, name: g.name })),
         cover_image: game.cover.url,
         rating: 0,

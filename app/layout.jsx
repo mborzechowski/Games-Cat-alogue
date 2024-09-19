@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <AuthProvider>
       <html lang='pl'>
-        <body className='flex flex-row min-h-screen font-sans '>
+        <body className='flex flex-col md:flex-row min-h-screen font-sans '>
           <NavBar />
           <ToastContainer
             theme='dark'
