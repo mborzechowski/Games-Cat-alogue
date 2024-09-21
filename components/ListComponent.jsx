@@ -8,36 +8,40 @@ const Lists = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const fetchGames = async (listType) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/api/getLibrary?list=${encodeURIComponent(listType)}`
+      );
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setGames(data);
+    } catch (err) {
+      console.error('Error fetching library:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!session || status === 'loading') {
       return;
     }
-
-    const fetchWhislist = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('/api/getLibrary?whislist=true');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setGames(data);
-      } catch (err) {
-        toast.error('Error fetching library:', err);
-        setError('Failed to load library.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWhislist();
-  }, [session, status]);
+    fetchGames(activeTab);
+  }, [activeTab, session, status]);
 
   const tabs = ['Wishlist', 'Next in line', 'On loan', 'On hold', 'On sale'];
 
   const renderContent = () => {
     switch (activeTab) {
       case 'Wishlist':
+      case 'Next in line':
+      case 'On loan':
+      case 'On hold':
+      case 'On sale':
         return (
           <div className='grid grid-cols-10 gap-8'>
             {games.map((game) => (
@@ -55,14 +59,6 @@ const Lists = () => {
             ))}
           </div>
         );
-      case 'Next in line':
-        return <div>Items next in line...</div>;
-      case 'On loan':
-        return <div>Items currently on loan...</div>;
-      case 'On hold':
-        return <div>Items on hold...</div>;
-      case 'On sale':
-        return <div>Items on sale...</div>;
       default:
         return <div>Select a tab to see content.</div>;
     }

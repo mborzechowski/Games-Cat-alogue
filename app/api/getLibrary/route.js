@@ -29,17 +29,34 @@ export async function GET(req) {
         }
 
         const url = new URL(req.url, `http://${req.headers.host}`);
-        const whislistParam = url.searchParams.get('whislist');
-        const whislist = whislistParam === 'true';
+        const listType = url.searchParams.get('list');
 
         const gamesQuery = {
             _id: { $in: user.library }
         };
 
-        if (!whislist) {
-            gamesQuery['lists'] = { $ne: 'whislist' }
+
+        const listMapping = {
+            'Wishlist': 'whislist',
+            'Next in line': 'next',
+            'On loan': 'loan',
+            'On hold': 'hold',
+            'On sale': 'sale'
+        };
+
+        if (listType) {
+            const mappedList = listMapping[listType];
+            if (mappedList) {
+                gamesQuery['lists'] = mappedList;
+            } else {
+                return new Response(JSON.stringify({ message: 'Invalid list type.' }), {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                });
+            }
         } else {
-            gamesQuery['lists'] = 'whislist'
+
+            gamesQuery['lists'] = { $ne: 'whislist' };
         }
 
         const library = await Game.find(gamesQuery).exec();

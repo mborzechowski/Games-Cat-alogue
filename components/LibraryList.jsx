@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import Spinner from '@/components/Spinner';
 import GameDetails from '@/components/GameDetails';
 import { toast } from 'react-toastify';
+import { setTimeout } from 'timers';
 
 const LibraryList = () => {
   const { data: session, status } = useSession();
@@ -11,6 +12,7 @@ const LibraryList = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
+  const [showGameDetails, setShowGameDetails] = useState(false);
 
   useEffect(() => {
     if (!session || status === 'loading') {
@@ -39,10 +41,14 @@ const LibraryList = () => {
 
   const handleGameClick = (game) => {
     setSelectedGame(game);
+    setShowGameDetails(true);
   };
 
   const handleCloseDetails = () => {
-    setSelectedGame(null);
+    setShowGameDetails(false);
+    setTimeout(() => {
+      setSelectedGame(null);
+    }, 500);
   };
 
   const handleSave = (updatedGame) => {
@@ -52,6 +58,13 @@ const LibraryList = () => {
       )
     );
     setSelectedGame(updatedGame);
+  };
+
+  const handleDeleteGame = (deletedGameId) => {
+    setGames((prevGames) =>
+      prevGames.filter((game) => game._id !== deletedGameId)
+    );
+    handleCloseDetails();
   };
 
   if (status === 'loading') {
@@ -93,7 +106,7 @@ const LibraryList = () => {
               alt={game.title}
               className='rounded-lg'
             />
-            <div className='absolute left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10'>
+            <div className='absolute left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-9'>
               {game.title}
               <p className='text-gray-400 text-center'>
                 {' '}
@@ -105,11 +118,18 @@ const LibraryList = () => {
         ))}
       </div>
       {selectedGame && (
-        <GameDetails
-          game={selectedGame}
-          onClose={handleCloseDetails}
-          onSave={handleSave}
-        />
+        <div
+          className={`fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center transform transition-all duration-500 ease-in-out ${
+            showGameDetails ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          }`}
+        >
+          <GameDetails
+            game={selectedGame}
+            onClose={handleCloseDetails}
+            onSave={handleSave}
+            onDelete={() => handleDeleteGame(selectedGame._id)}
+          />
+        </div>
       )}
     </div>
   );

@@ -1,11 +1,12 @@
 'use client';
-import { useState } from 'react';
-import { LiaEdit } from 'react-icons/lia';
+import { useState, useEffect } from 'react';
 import { TfiClose, TfiSave } from 'react-icons/tfi';
 import { FaCheckCircle, FaStar } from 'react-icons/fa';
+import { CiTrash, CiEdit } from 'react-icons/ci';
 import { toast } from 'react-toastify';
+import { deleteGame } from '@/utils/gameService';
 
-const GameDetails = ({ game, onClose, onSave }) => {
+const GameDetails = ({ game, onClose, onSave, onDelete }) => {
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentGame, setCurrentGame] = useState(game);
@@ -13,7 +14,6 @@ const GameDetails = ({ game, onClose, onSave }) => {
   const [note, setNote] = useState('');
   const [selectedLists, setSelectedLists] = useState([]);
   const [image, setImage] = useState(null);
-
   const [hoverRating, setHoverRating] = useState(0);
 
   const summaryLimit = 200;
@@ -23,11 +23,73 @@ const GameDetails = ({ game, onClose, onSave }) => {
     setIsSummaryExpanded(!isSummaryExpanded);
   };
 
-  const handleAddToList = (listName) => {
+  useEffect(() => {
+    if (currentGame) {
+      const initialLists = currentGame.lists.map((list) => {
+        const listMapping = {
+          loan: 'On loan',
+          next: 'Next in line',
+          sale: 'On sale',
+          hold: 'On hold',
+        };
+        return listMapping[list] || list;
+      });
+      setSelectedLists(initialLists);
+    }
+  }, [currentGame]);
+
+  const handleAddToList = async (listName) => {
+    let updatedLists;
+
     if (selectedLists.includes(listName)) {
-      setSelectedLists(selectedLists.filter((list) => list !== listName));
+      updatedLists = selectedLists.filter((list) => list !== listName);
     } else {
-      setSelectedLists([...selectedLists, listName]);
+      updatedLists = [...selectedLists, listName];
+    }
+
+    const listMapping = {
+      'On loan': 'loan',
+      'Next in line': 'next',
+      'On sale': 'sale',
+      'On hold': 'hold',
+    };
+
+    const mappedLists = updatedLists.map((list) => listMapping[list] || list);
+
+    setSelectedLists(updatedLists);
+
+    try {
+      const response = await fetch('/api/updateGame', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gameId: currentGame._id,
+          lists: mappedLists,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('Game lists updated successfully!');
+      } else {
+        throw new Error('Failed to update lists');
+      }
+    } catch (error) {
+      console.error('Error updating lists:', error);
+      toast.error('An error occurred while updating the lists');
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!currentGame || !currentGame._id) return;
+
+    try {
+      await deleteGame(currentGame._id);
+      toast.success('Game deleted successfully!');
+      onDelete();
+    } catch (error) {
+      toast.error('Failed to delete the game');
     }
   };
 
@@ -83,18 +145,26 @@ const GameDetails = ({ game, onClose, onSave }) => {
     <div className='p-4 bg-black text-white mt-4 h-2/3 w-2/3 absolute z-10 top-44 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg'>
       <div className='flex flex-col float-right gap-2 items-end'>
         <TfiClose
-          className='text-red-600 hover:text-red-700  size-6 mr-2'
+          className='text-red-600 hover:text-red-700 cursor-pointer  size-6 mr-2'
           onClick={onClose}
         />
+
         {isEditing ? (
-          <TfiSave
-            onClick={handleSave}
-            className='text-red-600 hover:text-red-700 size-6 cursor-pointer mt-2 mr-2'
-          />
+          <>
+            <TfiSave
+              onClick={handleSave}
+              className='text-red-600 hover:text-red-700 size-6 cursor-pointer mt-2 mr-2'
+            />
+
+            <CiTrash
+              onClick={handleDelete}
+              className='text-red-600 cursor-pointer size-8 mr-1 mt-1'
+            />
+          </>
         ) : (
-          <LiaEdit
+          <CiEdit
             onClick={() => setIsEditing(true)}
-            className='text-red-600 hover:text-red-700 cursor-pointer size-8'
+            className='text-red-600 hover:text-red-700 cursor-pointer size-8 mr-2 mt-1'
           />
         )}
       </div>

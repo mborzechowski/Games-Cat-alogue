@@ -1,10 +1,9 @@
 import connectDB from '@/config/mongodb';
-import User from '@/app/models/user';
 import UserGame from '@/app/models/game';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
 
-export async function PUT(req) {
+export async function DELETE(req) {
     try {
         await connectDB();
 
@@ -17,9 +16,9 @@ export async function PUT(req) {
             });
         }
 
-        const { gameId, rating, note, image, lists } = await req.json();
 
-
+        const url = new URL(req.url, `http://${req.headers.host}`);
+        const gameId = url.searchParams.get('gameId');
 
         if (!gameId) {
             return new Response(JSON.stringify({ message: 'Game ID is required.' }), {
@@ -28,47 +27,28 @@ export async function PUT(req) {
             });
         }
 
-        const game = await UserGame.findOne({
+
+        const deletedGame = await UserGame.findOneAndDelete({
             _id: gameId,
-            user_id: session.user.id
+            user_id: session.user.id,
         });
 
-        if (!game) {
-            return new Response(JSON.stringify({ message: 'Game not found.' }), {
+        if (!deletedGame) {
+            return new Response(JSON.stringify({ message: 'Game not found or already deleted.' }), {
                 status: 404,
                 headers: { 'Content-Type': 'application/json' },
             });
         }
 
-        if (rating !== undefined) {
-            game.rating = rating;
-        }
-        if (note) {
-            game.note = note;
-        }
-        if (image) {
-
-            game.image = image;
-        }
-
-        if (lists && Array.isArray(lists)) {
-            game.lists = lists;
-        }
-
-        await game.save();
-
-
-        return new Response(JSON.stringify(game), {
+        return new Response(JSON.stringify({ message: 'Game deleted successfully.' }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });
-
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error deleting game:', error);
         return new Response(JSON.stringify({ message: 'Server error.' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },
         });
-
     }
 }
