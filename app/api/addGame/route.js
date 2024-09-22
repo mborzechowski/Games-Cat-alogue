@@ -3,6 +3,9 @@ import User from '@/app/models/user';
 import UserGameSchema from '@/app/models/game';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
+import { getDlcDetails } from '@/utils/getDlcDetails'
+
+
 
 export async function POST(req) {
     try {
@@ -28,6 +31,9 @@ export async function POST(req) {
             publisher, dlc, expansions
         } = data;
 
+        const dlcDetails = await getDlcDetails(dlc);
+        const expansionsDetails = await getDlcDetails(expansions);
+
         const newUserGame = await UserGameSchema.create({
             user_id: session.user.id,
             igdb_id,
@@ -46,8 +52,8 @@ export async function POST(req) {
             franchises,
             developer,
             publisher,
-            dlc,
-            expansions,
+            dlc: dlcDetails,
+            expansions: expansionsDetails,
 
         });
 

@@ -76,10 +76,8 @@ const PlatformMenu = ({
               .filter((company) => company.publisher)
               .map((company) => company.company.name)
           : [],
-        dlc: game.dlcs ? game.dlcs.map((dlc) => dlc.name) : [],
-        expansions: game.expansions
-          ? game.expansions.map((expansion) => expansion.name)
-          : [],
+        dlc: game.dlcs ? game.dlcs.map(Number) : [],
+        expansions: game.expansions ? game.expansions.map(Number) : [],
       });
 
       if (response.status === 200) {

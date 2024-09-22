@@ -142,7 +142,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
   };
 
   return (
-    <div className='p-4 bg-black text-white mt-4 h-2/3 w-2/3 absolute z-10 top-44 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg'>
+    <div className='p-4 bg-black text-white mt-4 min-h-[300px] w-2/3 absolute z-10 top-22 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg max-h-[80vh]  overflow-y-auto'>
       <div className='flex flex-col float-right gap-2 items-end'>
         <TfiClose
           className='text-red-600 hover:text-red-700 cursor-pointer  size-6 mr-2'
@@ -206,7 +206,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
             <strong>Developer:</strong> {game.developer}
           </p>
           <p>
-            <strong>Publisher:</strong> {game.publisher}
+            <strong>Publisher:</strong> {game.publisher.join(', ')}
           </p>
 
           <div className='flex items-center gap-4'>
@@ -296,6 +296,50 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
           )}
         </div>
       </div>
+      <div className='mt-10 mb-10 flex justify-start gap-12'>
+        {game.expansions && game.expansions.length > 0 && (
+          <div className='flex flex-col items-center ml-10'>
+            <h4 className='font-semibold mb-2'>Expansions:</h4>
+            <div className='flex'>
+              {game.expansions.map((expansionItem) => (
+                <div key={expansionItem.id} className='relative group mx-2'>
+                  <img
+                    src={expansionItem.cover_image}
+                    alt={expansionItem.name}
+                    className='w-16 h-16 object-cover rounded-md'
+                  />
+
+                  <div className='absolute top-20 left-1/2 transform -translate-x-1/2 text-red-600 bg-black w-28 text-center  text-xs p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                    {expansionItem.name}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {game.dlc && game.dlc.length > 0 && (
+          <div className='flex flex-col items-center '>
+            <h4 className='font-semibold mb-2'>DLC:</h4>
+            <div className='flex'>
+              {game.dlc.map((dlcItem) => (
+                <div key={dlcItem.id} className='relative group mx-2'>
+                  <img
+                    src={dlcItem.cover_image}
+                    alt={dlcItem.name}
+                    className='w-16 h-16 object-cover rounded-md'
+                  />
+
+                  <div className='absolute top-20 left-1/2 transform -translate-x-1/2 text-red-600 bg-black w-28 text-center  text-xs p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                    {dlcItem.name}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className='mt-4'>
         {game.summary && (
           <p onClick={toggleSummary} className='cursor-pointer text-justify'>

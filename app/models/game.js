@@ -42,8 +42,16 @@ const UserGameSchema = new mongoose.Schema(
         franchises: [String],
         developer: [String],
         publisher: [String],
-        dlc: [String],
-        expansions: [String],
+        dlc: [{
+            id: { type: Number },
+            name: { type: String },
+            cover_image: { type: String },
+        }],
+        expansions: [{
+            id: { type: Number },
+            name: { type: String },
+            cover_image: { type: String },
+        }],
         date_added: {
             type: Date,
             default: Date.now,

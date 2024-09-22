@@ -113,7 +113,6 @@ const LibraryList = () => {
                 {game.platforms.map((p) => p.name).join(', ')}
               </p>
             </div>
-            <h2></h2>
           </div>
         ))}
       </div>
