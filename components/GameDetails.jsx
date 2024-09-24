@@ -142,7 +142,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
   };
 
   return (
-    <div className='p-4 bg-black text-white mt-4 min-h-[300px] w-2/3 absolute z-10 top-22 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg max-h-[80vh]  overflow-y-auto'>
+    <div className='p-4 bg-black text-white mt-4 min-h-[300px] w-2/3 absolute z-20 top-22 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg max-h-[80vh]  overflow-y-auto'>
       <div className='flex flex-col float-right gap-2 items-end'>
         <TfiClose
           className='text-red-600 hover:text-red-700 cursor-pointer  size-6 mr-2'
