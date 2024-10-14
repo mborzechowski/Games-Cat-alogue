@@ -21,7 +21,7 @@ const SearchBar = ({ query, setQuery, onSearch, loading }) => {
         {loading ? (
           <Spinner loading={loading} className='mt-2' />
         ) : (
-          <p className='mt-10 mb-14'>Search</p>
+          <p className='lg:mt-10 mt-4 mb-14'>Search</p>
         )}
       </button>
     </div>

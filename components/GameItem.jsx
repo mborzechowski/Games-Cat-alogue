@@ -70,7 +70,7 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
   };
 
   return (
-    <div className='flex flex-row items-center gap-4'>
+    <div className='flex lg:flex-row lg:items-center gap-4 flex-col'>
       {game.cover && (
         <img
           src={game.cover.url}

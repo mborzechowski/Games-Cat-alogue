@@ -75,13 +75,6 @@ const LibraryList = () => {
     publisher: [],
   });
 
-  console.log('platformy', platformOptions);
-  console.log('gatunki', genreOptions);
-  console.log('franczyzy', franchiseOptions);
-  console.log('theme', themeOptions);
-  console.log('DEV', developerOptions);
-  console.log('Publishers', publisherOptions);
-
   const handleFilterChange = (e, type) => {
     const value = e.target.value;
     setFilters((prevFilters) => ({
@@ -125,7 +118,9 @@ const LibraryList = () => {
   if (loading) {
     return (
       <>
-        <h1 className='text-red-600 mt-48 mb-8 text-xl'>Your Library</h1>
+        <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 text-lg'>
+          Your Library
+        </h1>
         <div className='flex justify-center items-center mt-24'>
           <Spinner loading={true} />
         </div>
@@ -143,9 +138,11 @@ const LibraryList = () => {
 
   return (
     <div>
-      <h1 className='text-red-600 mt-48 mb-8 text-xl'>Your Library</h1>
+      <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-lg ml-10'>
+        Your Library
+      </h1>
 
-      <div className='grid grid-cols-10 gap-8'>
+      <div className='flex flex-wrap gap-8 mb-8 justify-center lg:justify-normal '>
         {games.map((game) => (
           <div
             key={game._id}
@@ -181,7 +178,7 @@ const LibraryList = () => {
         </div>
       )}
 
-      <div className='fixed right-10 top-0 transform translate-x-full hover:translate-x-12 transition-transform duration-500 ease-in-out bg-opacity-90 bg-black text-white p-4 w-96 h-full shadow-lg rounded-lg'>
+      {/* <div className='fixed right-10 top-0 transform translate-x-full hover:translate-x-12 transition-transform duration-500 ease-in-out bg-opacity-90 bg-black text-white p-4 w-96 h-full shadow-lg rounded-lg'>
         <h2 className='text-white mb-4 text-lg font-semibold ml-10'>Filters</h2>
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ml-10'>
@@ -198,9 +195,9 @@ const LibraryList = () => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
-          {/* <div>
+      {/* <div>
             <label className='block text-gray-300 mb-2'>Genres</label>
             <select
               className='block w-full p-2 border border-gray-600 rounded-md bg-gray-900 text-white'
@@ -215,7 +212,7 @@ const LibraryList = () => {
             </select>
           </div> */}
 
-          <div>
+      {/* <div>
             <label className='block text-gray-300 mb-2'>Franchises</label>
             <select
               className='block w-full p-2 border border-gray-600 rounded-md bg-gray-900 text-white'
@@ -293,7 +290,7 @@ const LibraryList = () => {
             </select>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
