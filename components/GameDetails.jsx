@@ -172,7 +172,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
       <div className='flex mb-4'>
         <div className='w-1/4'>
           <img
-            src={game.cover_image.replace('t_thumb', 't_cover_big')}
+            src={game.cover_image.replace('t_thumb', 't_720p')}
             alt={game.title}
             className='w-full h-auto rounded-lg'
           />

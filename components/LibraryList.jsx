@@ -142,7 +142,7 @@ const LibraryList = () => {
         Your Library
       </h1>
 
-      <div className='flex flex-wrap gap-8 mb-8 justify-center lg:justify-normal '>
+      <div className='flex flex-wrap gap-6 mb-8 justify-center lg:justify-normal '>
         {games.map((game) => (
           <div
             key={game._id}
@@ -150,11 +150,11 @@ const LibraryList = () => {
             onClick={() => handleGameClick(game)}
           >
             <img
-              src={game.cover_image}
+              src={game.cover_image.replace('t_thumb', 't_cover_big')}
               alt={game.title}
-              className='rounded-lg'
+              className='rounded-lg w-20 h-auto'
             />
-            <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 py-1 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300 '>
+            <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 pt-10 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300 '>
               {game.title}
               <p className='text-gray-400 text-center'>
                 {game.platforms.map((p) => p.name).join(', ')}

@@ -64,7 +64,7 @@ const NavBar = () => {
         } lg:flex flex-col items-center gap-4 mt-10 lg:mt-0 lg:ml-0 ml-auto lg:w-auto w-full h-auto pb-5 lg:static fixed bottom-0 left-0 bg-black lg:bg-transparent z-10`}
       >
         {/* MainDashboard - hidden under menu on small screens */}
-        <MainDashboard />
+        <MainDashboard closeMenu={() => setIsMenuOpen(false)} />
 
         {session ? (
           <div className='flex items-center gap-4 -ml-20 lg:mt-40 text-sm'>

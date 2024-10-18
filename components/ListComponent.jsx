@@ -74,16 +74,18 @@ const Lists = () => {
       case 'On hold':
       case 'On sale':
         return (
-          <div className='flex flex-wrap gap-8 mb-8 justify-center lg:justify-normal '>
+          <div className='flex flex-wrap gap-4 mb-8 lg:justify-start justify-evenly'>
             {games.map((game) => (
               <div key={game._id} className='relative group cursor-pointer'>
                 <img
-                  src={game.cover_image}
+                  src={game.cover_image.replace('t_thumb', 't_cover_big')}
                   alt={game.title}
-                  className='rounded-lg'
-                  onClick={() => handleGameClick(game)}
+                  className='rounded-lg w-20 h-auto'
                 />
-                <div className='absolute left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10'>
+                <div
+                  className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 pt-10 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300'
+                  onClick={() => handleGameClick(game)}
+                >
                   {game.title}
                 </div>
                 <h2></h2>
@@ -114,7 +116,7 @@ const Lists = () => {
 
   return (
     <div className='lg:mt-44 md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-28 mt-20'>
-      <div className='flex lg:gap-4 gap-2 flex-wrap justify-center'>
+      <div className='flex lg:gap-4 gap-2 flex-wrap justify-center lg:justify-normal'>
         {tabs.map((tabName) => (
           <button
             key={tabName}

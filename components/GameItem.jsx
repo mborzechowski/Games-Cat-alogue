@@ -70,17 +70,17 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
   };
 
   return (
-    <div className='flex lg:flex-row lg:items-center gap-4 flex-col'>
+    <div className='flex flex-row items-center gap-4 '>
       {game.cover && (
         <img
-          src={game.cover.url}
+          src={game.cover.url.replace('t_thumb', 't_cover_big')}
           alt={game.name}
-          className='w-auto rounded-xl'
+          className='rounded-lg w-20 h-auto'
           onClick={() => toggleGameDetails(game)}
         />
       )}
       <div className='relative'>
-        <h2 className='text-lg mt-2 mb-2'>{game.name}</h2>
+        <h2 className='lg:text-lg text-md mt-2 mb-2'>{game.name}</h2>
         <div className='relative inline-block'>
           <AddToLibraryButton onClick={handleIconClick} />
           <PlatformMenu

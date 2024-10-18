@@ -10,7 +10,7 @@ import {
   IoListCircleOutline,
 } from 'react-icons/io5';
 
-const MainDashboard = () => {
+const MainDashboard = ({ closeMenu }) => {
   const buttons = [
     { icon: IoGameControllerOutline, label: 'Library', href: '/library' },
     { icon: IoCalendarClearOutline, label: 'Timeline', href: '/timeline' },
@@ -25,6 +25,7 @@ const MainDashboard = () => {
           <Link
             href={button.href}
             className='flex flex-row group w-64 h-10 bg-black  transition duration-300 transform hover:scale-105 hover:text-white text-gray-300 items-center justify-start gap-6 px-8'
+            onClick={closeMenu}
           >
             {React.createElement(button.icon, {
               className:

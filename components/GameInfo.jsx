@@ -16,7 +16,7 @@ const GameInfo = ({ game, onClose }) => {
     : 'Unknown';
 
   return (
-    <div className='p-4 bg-black text-white  mt-4 w-80 fixed  z-10 top-56 right-24 border-2 border-red-700'>
+    <div className='p-4 bg-black text-white  lg:mt-4 md:w-80 fixed w-[100vw] z-10  top-0 md:top-56 lg:top-80 right-0 md:right-12 lg:right-24 xl:right-72 border-2 border-red-700'>
       <div className='flex justify-between items-start'>
         <h2 className='text-xl font-bold'>{game.name}</h2>
         <TfiClose

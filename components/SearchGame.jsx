@@ -54,7 +54,7 @@ const SearchGame = () => {
   };
 
   return (
-    <div className='flex flex-col mt-48 gap-8'>
+    <div className='flex flex-col lg:mt-48 mt-24 gap-8'>
       <SearchBar
         query={query}
         setQuery={setQuery}
