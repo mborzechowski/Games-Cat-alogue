@@ -117,14 +117,14 @@ const LibraryList = () => {
 
   if (loading) {
     return (
-      <>
-        <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 text-lg'>
+      <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32 '>
+        <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-lg ml-10'>
           Your Library
         </h1>
         <div className='flex justify-center items-center mt-24'>
           <Spinner loading={true} />
         </div>
-      </>
+      </div>
     );
   }
 
@@ -137,7 +137,7 @@ const LibraryList = () => {
   }
 
   return (
-    <div>
+    <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32 '>
       <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-lg ml-10'>
         Your Library
       </h1>
@@ -152,9 +152,9 @@ const LibraryList = () => {
             <img
               src={game.cover_image}
               alt={game.title}
-              className='rounded-lg z-10'
+              className='rounded-lg'
             />
-            <div className='absolute left-1/2 transform -translate-x-1/2 top-5 w-max px-2 py-1 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-15'>
+            <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 py-1 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300 '>
               {game.title}
               <p className='text-gray-400 text-center'>
                 {game.platforms.map((p) => p.name).join(', ')}

@@ -11,7 +11,7 @@ const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className='bg-black shadow-md lg:w-72 w-full lg:h-full h-16 flex lg:flex-col flex-row items-center fixed justify-between lg:justify-start py-4 lg:py-10 px-4 lg:px-0 z-10'>
+    <nav className='bg-black shadow-md lg:w-72 md:w-42 w-full lg:h-full h-16 flex lg:flex-col flex-row items-center fixed justify-between lg:justify-start py-4 lg:py-10 px-4 lg:px-0 z-10 mr-10'>
       <Link
         href='/'
         className='text-white lg:text-3xl text-lg lg:mb-36 lg:mt-10 text-center flex'
