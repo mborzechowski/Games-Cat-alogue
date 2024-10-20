@@ -16,11 +16,11 @@ const GameInfo = ({ game, onClose }) => {
     : 'Unknown';
 
   return (
-    <div className='p-4 bg-black text-white  lg:mt-4 md:w-80 fixed w-[100vw] z-10  top-0 md:top-56 lg:top-80 right-0 md:right-12 lg:right-24 xl:right-72 border-2 border-red-700'>
+    <div className='p-4 bg-black text-white  lg:mt-4 md:w-80 fixed w-[100vw] z-10  top-0 md:top-56 lg:top-72 right-0 md:right-12 lg:right-24 xl:right-72 shadow-md shadow-red-700 rounded-lg'>
       <div className='flex justify-between items-start'>
         <h2 className='text-xl font-bold'>{game.name}</h2>
         <TfiClose
-          className='text-red-500 hover:text-red-700 size-8 pr-2'
+          className='text-red-500 hover:text-red-700 size-8 pr-2 cursor-pointer'
           onClick={onClose}
         />
       </div>
@@ -28,7 +28,7 @@ const GameInfo = ({ game, onClose }) => {
         <img
           src={game.cover.url.replace('t_thumb', 't_cover_big')}
           alt={game.name}
-          className='mt-4 mb-4 w-50 h-50'
+          className='mt-4 mb-4 w-50 h-50 rounded-lg'
         />
       )}
       <p>

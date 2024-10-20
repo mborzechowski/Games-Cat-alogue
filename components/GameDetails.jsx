@@ -142,7 +142,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
   };
 
   return (
-    <div className='p-4 bg-black text-white mt-4 min-h-[300px] w-2/3 absolute z-25 top-22 left-1/2 transform -translate-x-1/2 border-2 border-red-700 rounded-lg max-h-[80vh]  overflow-y-auto z-20'>
+    <div className='p-4 bg-black text-white min-h-[300px] lg:w-2/3 max-h-[80vh] absolute z-25 top-16 lg:top-48 rounded-lg  overflow-x-hidden overflow-y-auto'>
       <div className='flex flex-col float-right gap-2 items-end'>
         <TfiClose
           className='text-red-600 hover:text-red-700 cursor-pointer  size-6 mr-2'
@@ -169,7 +169,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
         )}
       </div>
 
-      <div className='flex mb-4'>
+      <div className='flex flex-col gap-4 md:flex-row mb-4'>
         <div className='w-1/4'>
           <img
             src={game.cover_image.replace('t_thumb', 't_720p')}
@@ -177,7 +177,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
             className='w-full h-auto rounded-lg'
           />
         </div>
-        <div className='w-1/2 pl-6'>
+        <div className='md:w-1/2 md:pl-6'>
           <h2 className='text-xl font-bold mb-2'>{game.title}</h2>
           <p>
             <strong>Platform:</strong>{' '}
@@ -273,7 +273,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
               </div>
 
               <div className='flex mt-2'>
-                <div className='flex space-x-4 mt-4'>
+                <div className='flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0  mt-4'>
                   {['Next in line', 'On loan', 'On hold', 'On sale'].map(
                     (list) => (
                       <div

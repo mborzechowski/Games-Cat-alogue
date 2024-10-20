@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import { TfiGallery } from 'react-icons/tfi';
+import { BsClipboardData } from 'react-icons/bs';
 
 import {
   IoGameControllerOutline,
@@ -13,7 +14,7 @@ import {
 const MainDashboard = ({ closeMenu }) => {
   const buttons = [
     { icon: IoGameControllerOutline, label: 'Library', href: '/library' },
-    { icon: IoCalendarClearOutline, label: 'Timeline', href: '/timeline' },
+    { icon: BsClipboardData, label: 'Stats', href: '/stats' },
     { icon: IoListCircleOutline, label: 'Lists', href: '/lists' },
     { icon: TfiGallery, label: 'Gallery', href: '/gallery' },
   ];

@@ -14,12 +14,12 @@ const LibraryList = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [showGameDetails, setShowGameDetails] = useState(false);
 
-  const [platformOptions, setPlatformOptions] = useState([]);
-  const [genreOptions, setGenreOptions] = useState([]);
-  const [franchiseOptions, setFranchiseOptions] = useState([]);
-  const [themeOptions, setThemeOptions] = useState([]);
-  const [developerOptions, setDeveloperOptions] = useState([]);
-  const [publisherOptions, setPublisherOptions] = useState([]);
+  // const [platformOptions, setPlatformOptions] = useState([]);
+  // const [genreOptions, setGenreOptions] = useState([]);
+  // const [franchiseOptions, setFranchiseOptions] = useState([]);
+  // const [themeOptions, setThemeOptions] = useState([]);
+  // const [developerOptions, setDeveloperOptions] = useState([]);
+  // const [publisherOptions, setPublisherOptions] = useState([]);
 
   useEffect(() => {
     if (!session || status === 'loading') {
@@ -46,42 +46,42 @@ const LibraryList = () => {
     fetchLibrary();
   }, [session, status]);
 
-  useEffect(() => {
-    const fetchFilterOptions = async () => {
-      try {
-        const response = await fetch('/api/getFilters');
-        const data = await response.json();
-        setPlatformOptions(data.platforms);
-        setGenreOptions(data.genres);
-        setFranchiseOptions(data.franchises);
-        setThemeOptions(data.themes);
-        setDeveloperOptions(data.developers);
-        setPublisherOptions(data.publishers);
-      } catch (error) {
-        console.error('Failed to fetch filter options:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchFilterOptions = async () => {
+  //     try {
+  //       const response = await fetch('/api/getFilters');
+  //       const data = await response.json();
+  //       setPlatformOptions(data.platforms);
+  //       setGenreOptions(data.genres);
+  //       setFranchiseOptions(data.franchises);
+  //       setThemeOptions(data.themes);
+  //       setDeveloperOptions(data.developers);
+  //       setPublisherOptions(data.publishers);
+  //     } catch (error) {
+  //       console.error('Failed to fetch filter options:', error);
+  //     }
+  //   };
 
-    fetchFilterOptions();
-  }, []);
+  //   fetchFilterOptions();
+  // }, []);
 
-  const [filters, setFilters] = useState({
-    platforms: [],
-    genres: [],
-    rating: [0, 10],
-    franchises: [],
-    themes: [],
-    developer: [],
-    publisher: [],
-  });
+  // const [filters, setFilters] = useState({
+  //   platforms: [],
+  //   genres: [],
+  //   rating: [0, 10],
+  //   franchises: [],
+  //   themes: [],
+  //   developer: [],
+  //   publisher: [],
+  // });
 
-  const handleFilterChange = (e, type) => {
-    const value = e.target.value;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [type]: value,
-    }));
-  };
+  // const handleFilterChange = (e, type) => {
+  //   const value = e.target.value;
+  //   setFilters((prevFilters) => ({
+  //     ...prevFilters,
+  //     [type]: value,
+  //   }));
+  // };
 
   const handleGameClick = (game) => {
     setSelectedGame(game);
@@ -154,7 +154,7 @@ const LibraryList = () => {
               alt={game.title}
               className='rounded-lg w-20 h-auto'
             />
-            <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 pt-10 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300 '>
+            <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 pt-3 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300 '>
               {game.title}
               <p className='text-gray-400 text-center'>
                 {game.platforms.map((p) => p.name).join(', ')}

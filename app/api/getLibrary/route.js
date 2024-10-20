@@ -8,7 +8,6 @@ import { authOptions } from '@/utils/authOptions';
 export async function GET(req) {
     try {
         await connectDB();
-
         const session = await getServerSession(authOptions);
 
         if (!session || !session.user || !session.user.id) {
