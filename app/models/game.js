@@ -52,6 +52,10 @@ const UserGameSchema = new mongoose.Schema(
             name: { type: String },
             cover_image: { type: String },
         }],
+        additional_img: [{
+            url: { type: String },
+            uploaded_at: { type: Date, default: Date.now }
+        }],
         date_added: {
             type: Date,
             default: Date.now,

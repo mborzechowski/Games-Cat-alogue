@@ -93,9 +93,69 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
     }
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    setImage(file);
+
+    const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!file) {
+      console.error('No file selected. Please choose an image to upload.');
+      return;
+    }
+    if (!validFormats.includes(file.type)) {
+      console.error(
+        'Invalid file format. Please upload a JPG, PNG, or GIF image.'
+      );
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'catalogue');
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/mb-team/image/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
+
+      const data = await response.json();
+      const imageUrl = data.secure_url;
+
+      const gameId = currentGame._id;
+      await saveImageToDatabase(gameId, imageUrl);
+
+      console.log('Image uploaded:', imageUrl);
+    } catch (error) {
+      console.error('Error uploading the image:', error);
+    }
+  };
+
+  const saveImageToDatabase = async (gameId, imageUrl) => {
+    try {
+      const response = await fetch('/api/addGameImage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ gameId, imageUrl }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save image URL to database');
+      }
+
+      const result = await response.json();
+      console.log('Image URL saved to database:', result);
+    } catch (error) {
+      console.error('Error saving image URL to database:', error);
+    }
   };
 
   const handleRatingClick = (index) => {

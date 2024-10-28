@@ -21,7 +21,6 @@ export async function GET(req) {
             lists: { $ne: 'whislist' }
         }).exec();
 
-
         if (!userGames || userGames.length === 0) {
             return new Response(JSON.stringify({ message: 'No games found.' }), {
                 status: 404,
@@ -35,32 +34,43 @@ export async function GET(req) {
         const publishersSet = new Set();
         const platformsSet = new Set();
         const ratings = userGames.map(game => game.rating).filter(rating => rating != null);
-        const listsCount = {};
+
+        // Zmienne do liczenia wystąpień
+        const genresCount = {};
+        const publishersCount = {};
+        const platformsCount = {};
+        const ratingsCount = Array(10).fill(0);  // Tablica dla ocen od 1 do 10
 
         userGames.forEach(game => {
-            // Zbieranie unikalnych gatunków
+            // Zbieranie unikalnych gatunków i ich liczba
             game.genres.forEach(genre => {
                 if (genre.name) {
                     genresSet.add(genre.name);
+                    genresCount[genre.name] = (genresCount[genre.name] || 0) + 1;
                 }
             });
 
-            // Zbieranie unikalnych wydawców
+            // Zbieranie unikalnych wydawców i ich liczba
             game.publisher.forEach(publisher => {
                 if (publisher) {
                     publishersSet.add(publisher);
+                    publishersCount[publisher] = (publishersCount[publisher] || 0) + 1;
                 }
             });
 
-            // Zbieranie unikalnych platform
+            // Zbieranie unikalnych platform i ich liczba
             game.platforms.forEach(platform => {
-                platformsSet.add(platform.name);
+                if (platform.name) {
+                    platformsSet.add(platform.name);
+                    platformsCount[platform.name] = (platformsCount[platform.name] || 0) + 1;
+                }
             });
 
-            // Zliczanie gier w poszczególnych listach
-            game.lists.forEach(list => {
-                listsCount[list] = (listsCount[list] || 0) + 1;
-            });
+            // Liczenie ocen
+            const rating = game.rating;
+            if (rating >= 1 && rating <= 10) {
+                ratingsCount[rating - 1] += 1; // Dopasowanie do indeksu tablicy (0–9)
+            }
         });
 
         // Statystyki do zwrócenia
@@ -68,12 +78,15 @@ export async function GET(req) {
             totalGames,
             genres: Array.from(genresSet),
             totalGenres: genresSet.size,
+            genresCount,
             publishers: Array.from(publishersSet),
             totalPublishers: publishersSet.size,
+            publishersCount,
             platforms: Array.from(platformsSet),
             totalPlatforms: platformsSet.size,
+            platformsCount,
             averageRating: ratings.length > 0 ? (ratings.reduce((acc, curr) => acc + curr, 0) / ratings.length).toFixed(1) : null,
-            gamesInLists: listsCount,
+            ratings: ratingsCount,
             newestGame: userGames.reduce((latest, game) => {
                 return latest.date_added > game.date_added ? latest : game;
             }).title,
