@@ -1,8 +1,8 @@
 import connectDB from '../../../config/mongodb';
 import Game from '../../models/game';
 
-export default async function handler(req, res) {
-    const { gameId, imageUrl } = req.body;
+export async function POST(req) {
+    const { gameId, imageUrl } = await req.json();
 
     try {
         await connectDB();
@@ -14,12 +14,21 @@ export default async function handler(req, res) {
         );
 
         if (!game) {
-            return res.status(404).json({ message: 'Game not found' });
+            return new Response(JSON.stringify({ message: 'Game not found' }), {
+                status: 404,
+                headers: { 'Content-Type': 'application/json' },
+            });
         }
 
-        res.status(200).json({ message: 'Image added successfully', game });
+        return new Response(JSON.stringify({ message: 'Image added successfully', game }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        });
     } catch (error) {
         console.error('Error adding the image:', error);
-        res.status(500).json({ message: 'Error adding the image' });
+        return new Response(JSON.stringify({ message: 'Error adding the image' }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+        });
     }
 }
