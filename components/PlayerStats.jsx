@@ -18,6 +18,9 @@ const PlayerStats = () => {
   const platformChartInstance = useRef(null);
   const ratingChartInstance = useRef(null);
 
+  const [changingDiv, setChangingDiv] = useState(true);
+  const [fade, setFade] = useState(true);
+
   useEffect(() => {
     const fetchStats = async () => {
       if (session) {
@@ -38,6 +41,18 @@ const PlayerStats = () => {
 
     fetchStats();
   }, [session]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        setChangingDiv((prev) => !prev);
+        setFade(true);
+      }, 500);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!stats) return;
@@ -156,12 +171,37 @@ const PlayerStats = () => {
               <p className='text-lg font-bold text-red-800'>Total Genres</p>
               <p className='text-2xl text-red-800'>{stats.totalGenres}</p>
             </div>
+            <div className='bg-black p-6 rounded-lg text-center h-32 w-full'>
+              <p className='text-lg font-bold text-red-800'>Finished Games</p>
+              <p className='text-2xl text-red-800'>
+                {stats.completedGamesCount}
+              </p>
+            </div>
           </div>
-          <div className='bg-black px-8 py-4 rounded-lg text-center h-32'>
-            <p className='text-lg font-bold mt-6 text-red-800'>Newest Game:</p>
-            <p className='text-red-800'>
-              {stats.newestGame || 'No games available'}
-            </p>
+          <div
+            className={`bg-black px-8 py-4 rounded-lg text-center h-32 transition-opacity duration-1000 ${
+              fade ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            {changingDiv ? (
+              <>
+                <p className='text-lg font-bold mt-6 text-red-800'>
+                  Latest Added Game:
+                </p>
+                <p className='text-red-800'>
+                  {stats.newestGame || 'No games available'}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className='text-lg font-bold mt-6 text-red-800'>
+                  Oldest Game in Catalogue:
+                </p>
+                <p className='text-red-800'>
+                  {stats.oldestGame || 'No games available'}
+                </p>
+              </>
+            )}
           </div>
         </div>
 

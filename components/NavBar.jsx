@@ -77,7 +77,7 @@ const NavBar = () => {
             />
             <button
               onClick={() => signOut()}
-              className='text-red-600 hover:text-white'
+              className='text-red-600 hover:text-white font-semibold'
             >
               Logout
             </button>
@@ -85,7 +85,7 @@ const NavBar = () => {
         ) : (
           <button
             onClick={() => signIn()}
-            className='text-red-600 hover:text-white lg:mt-40'
+            className='text-red-600 hover:text-white lg:mt-40 font-semibold'
           >
             Login
           </button>

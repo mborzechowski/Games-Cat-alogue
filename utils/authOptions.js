@@ -1,6 +1,6 @@
 import GoogleProvider from 'next-auth/providers/google';
 import connectDB from '@/config/mongodb';
-import User from '@/app/models/user'
+import User from '@/app/models/user';
 
 export const authOptions = {
     providers: [
@@ -17,40 +17,44 @@ export const authOptions = {
         })
     ],
     callbacks: {
-        // on successful signin
         async signIn({ profile }) {
-            // connect to database
-            await connectDB();
-            // checking if user exist
-            const userExist = await User.findOne({ email: profile.email })
-            // If not, then add user to database
-            if (!userExist) {
-                // Truncate user name if too long
-                const username = profile.name.slice(0, 20);
+            try {
+                // Connect to the database
+                await connectDB();
 
-                await User.create({
-                    email: profile.email,
-                    username,
-                    image: profile.picture
-                });
+                // Check if user exists in the database
+                const userExist = await User.findOne({ email: profile.email });
 
+                // If user does not exist, create a new user
+                if (!userExist) {
+                    const username = profile.name.slice(0, 20);
+                    await User.create({
+                        email: profile.email,
+                        username,
+                        image: profile.picture
+                    });
+                }
 
+                return true;
+            } catch (error) {
+                console.error('Error in signIn callback:', error);
+                return false;
             }
-
-            return true
-
-
         },
-        // modifies the session object
         async session({ session }) {
-            // Get user from database
-            const user = await User.findOne({ email: session.user.email })
-            // assign user id to the session
-            session.user.id = user._id.toString();
-            // console.log('session callback:', { session, token });
+            try {
+                // Ensure database connection
+                await connectDB();
 
-            return session
+                // Retrieve user data
+                const user = await User.findOne({ email: session.user.email });
+                session.user.id = user._id.toString();
 
+                return session;
+            } catch (error) {
+                console.error('Error in session callback:', error);
+                return session;
+            }
         }
     }
 }

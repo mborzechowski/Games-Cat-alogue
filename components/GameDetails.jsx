@@ -13,8 +13,9 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
   const [rating, setRating] = useState(game.rating || '');
   const [note, setNote] = useState('');
   const [selectedLists, setSelectedLists] = useState([]);
-  const [image, setImage] = useState(null);
   const [hoverRating, setHoverRating] = useState(0);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [finished, setFinished] = useState(null);
 
   const summaryLimit = 200;
   const shortSummary = game.summary?.substring(0, summaryLimit) + '...';
@@ -93,71 +94,6 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
     }
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-
-    const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!file) {
-      console.error('No file selected. Please choose an image to upload.');
-      return;
-    }
-    if (!validFormats.includes(file.type)) {
-      console.error(
-        'Invalid file format. Please upload a JPG, PNG, or GIF image.'
-      );
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'catalogue');
-
-    try {
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/mb-team/image/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to upload image');
-      }
-
-      const data = await response.json();
-      const imageUrl = data.secure_url;
-
-      const gameId = currentGame._id;
-      await saveImageToDatabase(gameId, imageUrl);
-
-      console.log('Image uploaded:', imageUrl);
-    } catch (error) {
-      console.error('Error uploading the image:', error);
-    }
-  };
-
-  const saveImageToDatabase = async (gameId, imageUrl) => {
-    try {
-      const response = await fetch('/api/addGameImage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ gameId, imageUrl }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save image URL to database');
-      }
-
-      const result = await response.json();
-      console.log('Image URL saved to database:', result);
-    } catch (error) {
-      console.error('Error saving image URL to database:', error);
-    }
-  };
-
   const handleRatingClick = (index) => {
     setRating(index);
   };
@@ -181,7 +117,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
           gameId: currentGame._id,
           rating,
           note,
-          image,
+          finished,
         }),
       });
 
@@ -198,6 +134,13 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
     } catch (error) {
       console.error('Error saving changes:', error);
       toast.error('An error occurred while saving changes');
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file.name);
     }
   };
 
@@ -268,6 +211,41 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
           <p>
             <strong>Publisher:</strong> {game.publisher.join(', ')}
           </p>
+          <div className=' flex items-center'>
+            <strong className={isEditing ? 'text-red-600' : ''}>
+              Finished:
+            </strong>
+            <p className='ml-2'>
+              {isEditing ? (
+                <>
+                  <button
+                    onClick={() => setFinished(true)}
+                    className={
+                      finished
+                        ? 'text-red-600 mr-2 cursor-pointer'
+                        : 'mr-2 cursor-pointer'
+                    }
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setFinished(false)}
+                    className={
+                      !finished
+                        ? 'text-red-600 mr-2 cursor-pointer'
+                        : 'mr-2 cursor-pointer'
+                    }
+                  >
+                    No
+                  </button>
+                </>
+              ) : game.finished ? (
+                'Yes'
+              ) : (
+                'No'
+              )}
+            </p>
+          </div>
 
           <div className='flex items-center gap-4'>
             <strong className={isEditing ? 'text-red-600' : ''}>Rating:</strong>{' '}
@@ -323,13 +301,18 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
                 <div className='relative'>
                   <input
                     type='file'
-                    onChange={handleImageUpload}
+                    onChange={handleFileChange}
                     className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
                   />
                   <button className='cursor-pointer flex items-center justify-center bg-gblack text-white  w-24 text-sm border-b-2 border-r-2 rounded-xl border-red-600'>
                     Choose file
                   </button>
                 </div>
+                {selectedFile && (
+                  <span className='ml-2 text-sm text-red-600 font-semibold'>
+                    {selectedFile}
+                  </span>
+                )}
               </div>
 
               <div className='flex mt-2'>

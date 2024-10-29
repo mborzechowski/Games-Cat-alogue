@@ -30,6 +30,7 @@ export async function GET(req) {
 
         // Statystyki
         const totalGames = userGames.length;
+        const completedGamesCount = userGames.filter(game => game.finished === true).length;
         const genresSet = new Set();
         const publishersSet = new Set();
         const platformsSet = new Set();
@@ -76,6 +77,7 @@ export async function GET(req) {
         // Statystyki do zwrócenia
         const stats = {
             totalGames,
+            completedGamesCount,
             genres: Array.from(genresSet),
             totalGenres: genresSet.size,
             genresCount,
@@ -89,6 +91,9 @@ export async function GET(req) {
             ratings: ratingsCount,
             newestGame: userGames.reduce((latest, game) => {
                 return latest.date_added > game.date_added ? latest : game;
+            }).title,
+            oldestGame: userGames.reduce((oldest, game) => {
+                return oldest.release_date < game.release_date ? oldest : game;
             }).title,
         };
 

@@ -4,6 +4,7 @@ import UserGameSchema from '@/app/models/game';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
 import { getDlcDetails } from '@/utils/getDlcDetails'
+import { finished } from 'stream';
 
 
 
@@ -28,7 +29,7 @@ export async function POST(req) {
             igdb_id, title, platforms, genres, cover_image, rating,
             personal_notes, lists, summary, category, themes,
             game_modes, player_perspectives, franchises, developer,
-            publisher, dlc, expansions
+            publisher, dlc, expansions, release_date, finished
         } = data;
 
         const dlcDetails = await getDlcDetails(dlc);
@@ -54,7 +55,8 @@ export async function POST(req) {
             publisher,
             dlc: dlcDetails,
             expansions: expansionsDetails,
-
+            release_date,
+            finished
         });
 
         await User.findByIdAndUpdate(

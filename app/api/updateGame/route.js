@@ -17,7 +17,7 @@ export async function PUT(req) {
             });
         }
 
-        const { gameId, rating, note, image, lists } = await req.json();
+        const { gameId, rating, note, additional_img, lists, finished } = await req.json();
 
 
 
@@ -46,13 +46,17 @@ export async function PUT(req) {
         if (note) {
             game.note = note;
         }
-        if (image) {
+        if (additional_img) {
 
-            game.image = image;
+            game.additional_img = additional_img;
         }
 
         if (lists && Array.isArray(lists)) {
             game.lists = lists;
+        }
+
+        if (finished) {
+            game.finished = finished
         }
 
         await game.save();

@@ -64,6 +64,11 @@ const UserGameSchema = new mongoose.Schema(
             type: Date,
             default: Date.now,
         },
+        release_date: {
+            type: Date,
+            required: false,
+        },
+        finished: { type: Boolean, default: false }
     },
     {
         timestamps: { createdAt: 'date_added', updatedAt: 'date_last_modified' },

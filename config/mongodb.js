@@ -15,13 +15,15 @@ const connectDB = async () => {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }).then((mongoose) => {
-      console.log('MongoDB connected...');
-      return mongoose;
-    });
+    cached.promise = mongoose.connect(process.env.MONGODB_URI)
+      .then((mongoose) => {
+        console.log('MongoDB connected...');
+        return mongoose;
+      })
+      .catch((error) => {
+        console.error('Error connecting to MongoDB:', error);
+        throw new Error('MongoDB connection failed');
+      });
   }
 
   cached.conn = await cached.promise;

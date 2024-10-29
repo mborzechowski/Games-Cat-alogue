@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { finished } from 'stream';
 
 const PlatformMenu = ({
   game,
@@ -78,6 +79,10 @@ const PlatformMenu = ({
           : [],
         dlc: game.dlcs ? game.dlcs.map(Number) : [],
         expansions: game.expansions ? game.expansions.map(Number) : [],
+        release_date: game.release_dates[0].human
+          ? new Date(game.release_dates[0].human)
+          : null,
+        finished: false,
       });
 
       if (response.status === 200) {
