@@ -29,7 +29,7 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
         cover_image: game.cover.url,
         rating: 0,
         personal_notes: 'My notes',
-        lists: 'whislist',
+        lists: 'wishlist',
         summary: game.summary || '',
         category: game.category || '',
         themes: game.themes ? game.themes.map((t) => t.name) : [],
@@ -71,14 +71,16 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
 
   return (
     <div className='flex flex-row items-center gap-4 '>
-      {game.cover && (
-        <img
-          src={game.cover.url.replace('t_thumb', 't_cover_big')}
-          alt={game.name}
-          className='rounded-lg w-20 h-auto'
-          onClick={() => toggleGameDetails(game)}
-        />
-      )}
+      <img
+        src={
+          game.cover
+            ? game.cover.url.replace('t_thumb', 't_cover_big')
+            : '/temp_cover.png'
+        }
+        alt={game.name || 'Placeholder cover'}
+        className='rounded-lg w-20 h-auto'
+        onClick={() => toggleGameDetails(game)}
+      />
       <div className='relative'>
         <h2 className='lg:text-lg text-md mt-2 mb-2'>{game.name}</h2>
         <div className='relative inline-block'>

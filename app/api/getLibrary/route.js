@@ -36,7 +36,7 @@ export async function GET(req) {
 
 
         const listMapping = {
-            'Wishlist': 'whislist',
+            'Wishlist': 'wishlist',
             'Next in line': 'next',
             'On loan': 'loan',
             'On hold': 'hold',
@@ -55,7 +55,7 @@ export async function GET(req) {
             }
         } else {
 
-            gamesQuery['lists'] = { $ne: 'whislist' };
+            gamesQuery['lists'] = { $ne: 'wishlist' };
         }
 
         const library = await Game.find(gamesQuery).exec();

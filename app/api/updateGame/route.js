@@ -3,6 +3,8 @@ import User from '@/app/models/user';
 import UserGame from '@/app/models/game';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
+import cloudinary from '@/config/cloudinary';
+import { log } from 'console';
 
 export async function PUT(req) {
     try {
@@ -17,7 +19,7 @@ export async function PUT(req) {
             });
         }
 
-        const { gameId, rating, note, additional_img, lists, finished } = await req.json();
+        const { gameId, rating, note, fileData, lists, finished } = await req.json();
 
 
 
@@ -46,10 +48,6 @@ export async function PUT(req) {
         if (note) {
             game.note = note;
         }
-        if (additional_img) {
-
-            game.additional_img = additional_img;
-        }
 
         if (lists && Array.isArray(lists)) {
             game.lists = lists;
@@ -57,6 +55,20 @@ export async function PUT(req) {
 
         if (finished) {
             game.finished = finished
+        }
+
+        if (fileData) {
+            const base64Data = fileData.split(',')[1];
+            const uploadResponse = await cloudinary.uploader.upload(`data:image/png;base64,${base64Data}`, {
+                folder: 'catalogue',
+                upload_preset: 'catalogue',
+            });
+            console.log("secure url", uploadResponse.secure_url);
+
+            game.additional_img.push({
+                url: uploadResponse.secure_url,
+                uploaded_at: new Date()
+            });
         }
 
         await game.save();

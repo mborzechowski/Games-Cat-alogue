@@ -163,23 +163,29 @@ const PlayerStats = () => {
       <div className='flex flex-col sm:flex-row gap-4'>
         <div className='flex flex-col gap-4 w-full sm:w-1/2'>
           <div className='flex mb-6 gap-2'>
-            <div className='bg-black p-6 rounded-lg text-center h-32 w-full'>
-              <p className='text-lg font-bold text-red-800'>Total Games</p>
-              <p className='text-2xl text-red-800'>{stats.totalGames}</p>
+            <div className='bg-black p-4 rounded-lg text-center h-28 w-auto'>
+              <p className='text-lg font-semibold text-red-800'>Total Games</p>
+              <p className='text-2xl font-bold text-red-800'>
+                {stats.totalGames}
+              </p>
             </div>
-            <div className='bg-black p-6 rounded-lg text-center h-32 w-full'>
-              <p className='text-lg font-bold text-red-800'>Total Genres</p>
-              <p className='text-2xl text-red-800'>{stats.totalGenres}</p>
+            <div className='bg-black p-4 rounded-lg text-center h-28 w-auto'>
+              <p className='text-lg font-semibold text-red-800'>Total Genres</p>
+              <p className='text-2xl font-bold text-red-800'>
+                {stats.totalGenres}
+              </p>
             </div>
-            <div className='bg-black p-6 rounded-lg text-center h-32 w-full'>
-              <p className='text-lg font-bold text-red-800'>Finished Games</p>
-              <p className='text-2xl text-red-800'>
+            <div className='bg-black p-4 rounded-lg text-center h-28 w-auto'>
+              <p className='text-lg font-semibold text-red-800'>
+                Finished Games
+              </p>
+              <p className='text-2xl font-bold text-red-800'>
                 {stats.completedGamesCount}
               </p>
             </div>
           </div>
           <div
-            className={`bg-black px-8 py-4 rounded-lg text-center h-32 transition-opacity duration-1000 ${
+            className={`bg-black py-4 rounded-lg text-center h-32 sm:w-96 transition-opacity duration-1000 ${
               fade ? 'opacity-100' : 'opacity-0'
             }`}
           >

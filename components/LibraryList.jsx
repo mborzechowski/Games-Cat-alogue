@@ -14,13 +14,6 @@ const LibraryList = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [showGameDetails, setShowGameDetails] = useState(false);
 
-  // const [platformOptions, setPlatformOptions] = useState([]);
-  // const [genreOptions, setGenreOptions] = useState([]);
-  // const [franchiseOptions, setFranchiseOptions] = useState([]);
-  // const [themeOptions, setThemeOptions] = useState([]);
-  // const [developerOptions, setDeveloperOptions] = useState([]);
-  // const [publisherOptions, setPublisherOptions] = useState([]);
-
   useEffect(() => {
     if (!session || status === 'loading') {
       return;
@@ -45,43 +38,6 @@ const LibraryList = () => {
 
     fetchLibrary();
   }, [session, status]);
-
-  // useEffect(() => {
-  //   const fetchFilterOptions = async () => {
-  //     try {
-  //       const response = await fetch('/api/getFilters');
-  //       const data = await response.json();
-  //       setPlatformOptions(data.platforms);
-  //       setGenreOptions(data.genres);
-  //       setFranchiseOptions(data.franchises);
-  //       setThemeOptions(data.themes);
-  //       setDeveloperOptions(data.developers);
-  //       setPublisherOptions(data.publishers);
-  //     } catch (error) {
-  //       console.error('Failed to fetch filter options:', error);
-  //     }
-  //   };
-
-  //   fetchFilterOptions();
-  // }, []);
-
-  // const [filters, setFilters] = useState({
-  //   platforms: [],
-  //   genres: [],
-  //   rating: [0, 10],
-  //   franchises: [],
-  //   themes: [],
-  //   developer: [],
-  //   publisher: [],
-  // });
-
-  // const handleFilterChange = (e, type) => {
-  //   const value = e.target.value;
-  //   setFilters((prevFilters) => ({
-  //     ...prevFilters,
-  //     [type]: value,
-  //   }));
-  // };
 
   const handleGameClick = (game) => {
     setSelectedGame(game);
@@ -177,120 +133,6 @@ const LibraryList = () => {
           />
         </div>
       )}
-
-      {/* <div className='fixed right-10 top-0 transform translate-x-full hover:translate-x-12 transition-transform duration-500 ease-in-out bg-opacity-90 bg-black text-white p-4 w-96 h-full shadow-lg rounded-lg'>
-        <h2 className='text-white mb-4 text-lg font-semibold ml-10'>Filters</h2>
-
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ml-10'>
-          <div>
-            <label className='block text-gray-300 mb-2'>Platforms</label>
-            <select
-              className='block w-full p-2 border border-gray-600 rounded-md bg-gray-900 text-white'
-              multiple
-              onChange={(e) => handleFilterChange(e, 'platforms')}
-            >
-              {platformOptions.map((platform) => (
-                <option key={platform} value={platform}>
-                  {platform}
-                </option>
-              ))}
-            </select>
-          </div> */}
-
-      {/* <div>
-            <label className='block text-gray-300 mb-2'>Genres</label>
-            <select
-              className='block w-full p-2 border border-gray-600 rounded-md bg-gray-900 text-white'
-              multiple
-              onChange={(e) => handleFilterChange(e, 'genres')}
-            >
-              {genreOptions.map((genre) => (
-                <option key={genre} value={genre}>
-                  {genre}
-                </option>
-              ))}
-            </select>
-          </div> */}
-
-      {/* <div>
-            <label className='block text-gray-300 mb-2'>Franchises</label>
-            <select
-              className='block w-full p-2 border border-gray-600 rounded-md bg-gray-900 text-white'
-              multiple
-              onChange={(e) => handleFilterChange(e, 'franchises')}
-            >
-              {franchiseOptions.map((franchise) => (
-                <option key={franchise} value={franchise}>
-                  {franchise}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className='block text-gray-300 mb-2'>Rating</label>
-            <input
-              type='range'
-              min='0'
-              max='10'
-              className='w-full'
-              value={filters.rating}
-              onChange={(e) =>
-                setFilters({ ...filters, rating: [e.target.value] })
-              }
-            />
-          </div>
-
-          <div>
-            <label className='block text-gray-300 mb-2'>Themes</label>
-            <select
-              className='block w-full p-2 border border-gray-600 rounded-md bg-gray-900 text-white'
-              multiple
-              onChange={(e) => handleFilterChange(e, 'themes')}
-            >
-              {themeOptions.map((theme) => (
-                <option key={theme} value={theme}>
-                  {theme}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className='block text-gray-300 mb-2'>Developer</label>
-            <select
-              className='block w-full p-2 border border-gray-600 rounded-md bg-gray-900 text-white'
-              onChange={(e) =>
-                setFilters({ ...filters, developer: e.target.value })
-              }
-            >
-              <option value=''>All</option>
-              {developerOptions.map((developer) => (
-                <option key={developer} value={developer}>
-                  {developer}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className='block text-gray-300 mb-2'>Publisher</label>
-            <select
-              className='block w-full p-2 border border-gray-600 rounded-md bg-gray-900 text-white'
-              onChange={(e) =>
-                setFilters({ ...filters, publisher: e.target.value })
-              }
-            >
-              <option value=''>All</option>
-              {publisherOptions.map((publisher) => (
-                <option key={publisher} value={publisher}>
-                  {publisher}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };
