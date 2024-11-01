@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { TfiClose, TfiSave } from 'react-icons/tfi';
 import { CiTrash, CiEdit } from 'react-icons/ci';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ import GameExpansionsAndDlc from '@/components/_GameDetails/GameExpansionsAndDlc
 import GameDetailsNoteAndImage from '@/components/_GameDetails/GameDetailsNoteAndImage';
 import GameFinishedStatus from '@/components/_GameDetails/GameFinishedStatus';
 import GameRating from '@/components/_GameDetails/GameRating';
+import AdditionalImages from '@/components/_GameDetails/AdditionalImages';
 
 const GameDetails = ({ game, onClose, onSave, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -22,6 +23,9 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
   const [finished, setFinished] = useState(null);
   const [fileData, setFileData] = useState(null);
   const [wishlist, setWishlist] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const detailsRef = useRef(null);
 
   useEffect(() => {
     if (currentGame) {
@@ -41,6 +45,19 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
       }
     }
   }, [currentGame]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (detailsRef.current && !detailsRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const handleAddToList = async (listName) => {
     let updatedLists;
@@ -153,8 +170,19 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
     }
   };
 
+  const handleImageClick = (url) => {
+    setSelectedImage(url);
+  };
+
+  const handleCloseImage = () => {
+    setSelectedImage(null);
+  };
+
   return (
-    <div className='p-4 bg-black text-white min-h-[300px] lg:w-2/3 max-h-[80vh] absolute z-25 top-16 lg:top-48 rounded-lg  overflow-x-hidden overflow-y-auto'>
+    <div
+      ref={detailsRef}
+      className='p-4 bg-black text-white min-h-[300px] lg:w-2/3 max-h-[88vh] absolute z-25 top-16 lg:top-26 rounded-lg  overflow-x-hidden overflow-y-auto'
+    >
       <div className='flex flex-col float-right gap-2 items-end'>
         <TfiClose
           className='text-red-600 hover:text-red-700 cursor-pointer  size-6 mr-2'
@@ -224,6 +252,21 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
 
       <GameExpansionsAndDlc expansions={game.expansions} dlc={game.dlc} />
       <GameSummary summary={game.summary} />
+      <AdditionalImages
+        images={currentGame.additional_img}
+        onImageClick={handleImageClick}
+      />
+
+      {selectedImage && (
+        <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-80 z-30'>
+          <img
+            src={selectedImage}
+            alt='Enlarged'
+            className='max-w-full max-h-full'
+            onClick={handleCloseImage}
+          />
+        </div>
+      )}
     </div>
   );
 };
