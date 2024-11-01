@@ -15,7 +15,7 @@ export async function POST(request) {
            game_modes.name, player_perspectives.name, franchises.name,
            dlcs, expansions;  
     where category = (0,3, 4, 8, 9, 10, 11);
-    limit 20;`,
+    limit 30;`,
             {
                 headers: {
                     'Client-ID': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID,

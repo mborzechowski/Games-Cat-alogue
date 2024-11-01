@@ -7,6 +7,7 @@ import GameList from './GameList';
 
 const SearchGame = () => {
   const [query, setQuery] = useState('');
+  const [developerName, setDeveloperName] = useState('');
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -37,7 +38,7 @@ const SearchGame = () => {
     try {
       const response = await axios.post(
         '/api/igdb',
-        { query },
+        { query, developerName },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -60,6 +61,8 @@ const SearchGame = () => {
         setQuery={setQuery}
         onSearch={igdbSearch}
         loading={loading}
+        developerName={developerName}
+        setDeveloperName={setDeveloperName}
       />
 
       {error && <p>{error}</p>}

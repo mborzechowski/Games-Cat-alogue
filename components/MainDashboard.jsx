@@ -5,11 +5,7 @@ import React from 'react';
 import { TfiGallery } from 'react-icons/tfi';
 import { BsClipboardData } from 'react-icons/bs';
 
-import {
-  IoGameControllerOutline,
-  IoCalendarClearOutline,
-  IoListCircleOutline,
-} from 'react-icons/io5';
+import { IoGameControllerOutline, IoListCircleOutline } from 'react-icons/io5';
 
 const MainDashboard = ({ closeMenu }) => {
   const buttons = [
