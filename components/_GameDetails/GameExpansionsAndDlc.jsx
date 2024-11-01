@@ -1,6 +1,6 @@
 const GameExpansionsAndDlc = ({ expansions, dlc }) => {
   return (
-    <div className='mt-10 mb-10 flex justify-start gap-12'>
+    <div className='mt-10 mb-10 flex flex-col sm:flex-row  justify-start gap-12'>
       {expansions && expansions.length > 0 && (
         <div className='flex flex-col items-center ml-10'>
           <h4 className='font-semibold mb-2'>Expansions:</h4>

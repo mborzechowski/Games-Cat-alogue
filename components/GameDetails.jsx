@@ -181,7 +181,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
   return (
     <div
       ref={detailsRef}
-      className='p-4 bg-black text-white min-h-[300px] lg:w-2/3 max-h-[88vh] absolute z-25 top-16 lg:top-26 rounded-lg  overflow-x-hidden overflow-y-auto'
+      className='p-4 bg-black text-white min-h-[660px] lg:w-2/3 max-h-[88vh] absolute z-25 top-16 lg:top-26 rounded-lg  overflow-x-hidden overflow-y-auto'
     >
       <div className='flex flex-col float-right gap-2 items-end'>
         <TfiClose

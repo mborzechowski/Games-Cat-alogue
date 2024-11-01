@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 const GameSummary = ({ summary }) => {
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
-  const summaryLimit = 200;
+  const summaryLimit = 120;
   const shortSummary = summary?.substring(0, summaryLimit) + '...';
 
   const toggleSummary = () => {
@@ -11,7 +11,7 @@ const GameSummary = ({ summary }) => {
   };
 
   return (
-    <div className='mt-4'>
+    <div className='mt-2'>
       {summary && (
         <p onClick={toggleSummary} className='cursor-pointer text-justify'>
           <strong>Summary: </strong>
