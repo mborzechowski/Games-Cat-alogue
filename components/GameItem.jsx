@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PlatformMenu from './PlatformMenu';
 import AddToLibraryButton from './AddToLibraryButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,6 +10,18 @@ import { toast } from 'react-toastify';
 const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
   const { data: session } = useSession();
   const [checkedPlatforms, setCheckedPlatforms] = useState([]);
+  const [isReleased, setIsReleased] = useState(false);
+
+  useEffect(() => {
+    const releaseDate = game.release_dates && game.release_dates[0]?.human;
+
+    if (releaseDate && releaseDate !== 'unknown') {
+      const releaseDateObject = new Date(releaseDate);
+      setIsReleased(releaseDateObject <= new Date());
+    } else {
+      setIsReleased(false);
+    }
+  }, [game.release_dates]);
 
   const handleIconClick = () => {
     toggleMenu(game.id);
@@ -91,13 +103,20 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
             : '/temp_cover.png'
         }
         alt={game.name || 'Placeholder cover'}
-        className='rounded-lg w-20 h-auto'
+        className='rounded-lg w-24 h-auto cursor-pointer'
         onClick={() => toggleGameDetails(game)}
       />
       <div className='relative bg-black rounded-r-xl p-2 pl-6 w-full sm:w-2/5'>
-        <h2 className='lg:text-lg text-sm mt-2 mb-2'>{game.name}</h2>
-        <div className='relative inline-block'>
-          <AddToLibraryButton onClick={handleIconClick} />
+        <h2 className='lg:text-lg text-sm mt-2 mb-2 flex flex-col gap-1 items-center'>
+          <p>{game.name}</p>
+          <p className='text-xs'>
+            {game.release_dates && game.release_dates[0]?.human && (
+              <> ({new Date(game.release_dates[0].human).getFullYear()})</>
+            )}
+          </p>
+        </h2>
+        <div className='flex justify-center'>
+          {isReleased && <AddToLibraryButton onClick={handleIconClick} />}
           <PlatformMenu
             game={game}
             session={session}
@@ -106,12 +125,20 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
             setCheckedPlatforms={setCheckedPlatforms}
             onClose={() => toggleMenu(game.id)}
           />
+          {!isReleased && (
+            <p>
+              <strong>Premiere: </strong>
+              {game.release_dates && game.release_dates[0]?.human !== 'unknown'
+                ? game.release_dates[0].human
+                : 'unknown'}
+            </p>
+          )}
+          <FontAwesomeIcon
+            icon={faHeartCirclePlus}
+            className='icon w-4 sm:w-6 h-auto cursor-pointer ml-3 hover:text-red-600'
+            onClick={handleAddToWishlist}
+          />
         </div>
-        <FontAwesomeIcon
-          icon={faHeartCirclePlus}
-          className='icon w-4 sm:w-6 h-auto cursor-pointer ml-2 hover:text-red-600'
-          onClick={handleAddToWishlist}
-        />
       </div>
     </div>
   );

@@ -101,12 +101,16 @@ export async function GET(req) {
             digitalGames: digitalCount,
             averageRating: ratings.length > 0 ? (ratings.reduce((acc, curr) => acc + curr, 0) / ratings.length).toFixed(1) : null,
             ratings: ratingsCount,
-            newestGame: userGames.reduce((latest, game) => {
-                return latest.date_added > game.date_added ? latest : game;
-            }).title,
-            oldestGame: userGames.reduce((oldest, game) => {
-                return oldest.release_date < game.release_date ? oldest : game;
-            }).title,
+            newestGame: userGames
+                .filter(game => !game.lists.includes('wishlist'))
+                .reduce((latest, game) => {
+                    return latest.date_added > game.date_added ? latest : game;
+                }).title,
+            oldestGame: userGames
+                .filter(game => new Date(game.release_date) <= new Date() && !game.lists.includes('wishlist'))
+                .reduce((oldest, game) => {
+                    return oldest.release_date < game.release_date ? oldest : game;
+                }).title,
         };
 
         return new Response(JSON.stringify(stats), {

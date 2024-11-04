@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect, useRef } from 'react';
 import { TfiClose, TfiSave } from 'react-icons/tfi';
 import { CiTrash, CiEdit } from 'react-icons/ci';
@@ -114,17 +115,9 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
     }
   };
 
-  const handleRatingClick = (index) => {
-    setRating(index);
-  };
-
-  const handleRatingHover = (index) => {
-    setHoverRating(index);
-  };
-
-  const handleRatingHoverOut = () => {
-    setHoverRating(0);
-  };
+  const handleRatingClick = (index) => setRating(index);
+  const handleRatingHover = (index) => setHoverRating(index);
+  const handleRatingHoverOut = () => setHoverRating(0);
 
   const handleSave = async () => {
     try {
@@ -170,25 +163,19 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
     }
   };
 
-  const handleImageClick = (url) => {
-    setSelectedImage(url);
-  };
-
-  const handleCloseImage = () => {
-    setSelectedImage(null);
-  };
+  const handleImageClick = (url) => setSelectedImage(url);
+  const handleCloseImage = () => setSelectedImage(null);
 
   return (
     <div
       ref={detailsRef}
-      className='p-4 bg-black text-white min-h-[500px] lg:w-2/3 max-h-[88vh] absolute z-25 top-16 lg:top-26 rounded-lg  overflow-x-hidden overflow-y-auto'
+      className='p-4 bg-black text-white min-h-[500px] lg:w-2/3 max-h-[88vh] absolute z-25 top-16 lg:top-26 rounded-lg overflow-x-hidden overflow-y-auto'
     >
       <div className='flex flex-col float-right gap-2 items-end'>
         <TfiClose
-          className='text-red-600 hover:text-red-700 cursor-pointer  size-6 mr-2'
+          className='text-red-600 hover:text-red-700 cursor-pointer size-6 mr-2'
           onClick={onClose}
         />
-
         {!wishlist &&
           (isEditing ? (
             <>
@@ -220,24 +207,23 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
         <div className='md:w-1/2 md:pl-6'>
           <GameDetailsHeader game={game} wishlist={wishlist} />
           {!wishlist && (
-            <GameFinishedStatus
-              isEditing={isEditing}
-              finished={finished}
-              setFinished={setFinished}
-              game={currentGame}
-            />
+            <>
+              <GameFinishedStatus
+                isEditing={isEditing}
+                finished={finished}
+                setFinished={setFinished}
+                game={currentGame}
+              />
+              <GameRating
+                isEditing={isEditing}
+                rating={rating}
+                hoverRating={hoverRating}
+                handleRatingClick={handleRatingClick}
+                handleRatingHover={handleRatingHover}
+                handleRatingHoverOut={handleRatingHoverOut}
+              />
+            </>
           )}
-          {!wishlist && (
-            <GameRating
-              isEditing={isEditing}
-              rating={rating}
-              hoverRating={hoverRating}
-              handleRatingClick={handleRatingClick}
-              handleRatingHover={handleRatingHover}
-              handleRatingHoverOut={handleRatingHoverOut}
-            />
-          )}
-
           <GameDetailsNoteAndImage
             note={note}
             setNote={setNote}
