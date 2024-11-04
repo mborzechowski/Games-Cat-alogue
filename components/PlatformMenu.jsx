@@ -75,7 +75,7 @@ const PlatformMenu = ({
         cover_image:
           game.cover && game.cover.url ? game.cover.url : '/temp_cover.png',
         rating: 0,
-        personal_notes: 'My notes',
+        personal_notes: '',
         lists: [],
         summary: game.summary || '',
         category: game.category || '',

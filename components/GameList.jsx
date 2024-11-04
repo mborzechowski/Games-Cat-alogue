@@ -9,9 +9,9 @@ const GameList = ({
   toggleGameDetails,
 }) => {
   return (
-    <div className='grid grid-cols-1 gap-4 items-start md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32'>
+    <div className='grid grid-cols-1 gap-6 mb-24 items-start md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32'>
       {games.map((game) => (
-        <div key={game.id}>
+        <div key={game.id} className=''>
           <GameItem
             game={game}
             isActive={activeMenuId === game.id}

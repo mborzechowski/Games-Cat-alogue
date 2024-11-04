@@ -24,11 +24,20 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
       const response = await axios.post('/api/addGame', {
         igdb_id: game.id,
         title: game.name,
-        platforms: [],
-        genres: game.genres.map((g) => ({ id: g.id, name: g.name })),
-        cover_image: game.cover.url,
+        platforms: game.platforms
+          ? game.platforms.map((p) => ({
+              id: p.id,
+              name: p.name,
+              medium: 'unknown',
+            }))
+          : [],
+        genres: game.genres
+          ? game.genres.map((g) => ({ id: g.id, name: g.name }))
+          : [],
+        cover_image:
+          game.cover && game.cover.url ? game.cover.url : '/temp_cover.png',
         rating: 0,
-        personal_notes: 'My notes',
+        personal_notes: '',
         lists: 'wishlist',
         summary: game.summary || '',
         category: game.category || '',
@@ -56,6 +65,10 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
         expansions: game.expansions
           ? game.expansions.map((expansion) => expansion.name)
           : [],
+        release_date: game.release_dates[0].human
+          ? new Date(game.release_dates[0].human)
+          : null,
+        finished: false,
       });
 
       if (response.status === 200) {
@@ -70,7 +83,7 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
   };
 
   return (
-    <div className='flex flex-row items-center gap-4 '>
+    <div className='flex flex-row items-center gap-0 '>
       <img
         src={
           game.cover
@@ -81,8 +94,8 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
         className='rounded-lg w-20 h-auto'
         onClick={() => toggleGameDetails(game)}
       />
-      <div className='relative'>
-        <h2 className='lg:text-lg text-md mt-2 mb-2'>{game.name}</h2>
+      <div className='relative bg-black rounded-r-xl p-2 pl-6 w-full sm:w-2/5'>
+        <h2 className='lg:text-lg text-sm mt-2 mb-2'>{game.name}</h2>
         <div className='relative inline-block'>
           <AddToLibraryButton onClick={handleIconClick} />
           <PlatformMenu
@@ -96,7 +109,7 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
         </div>
         <FontAwesomeIcon
           icon={faHeartCirclePlus}
-          className='icon w-6 h-6 cursor-pointer ml-2 hover:text-red-600'
+          className='icon w-4 sm:w-6 h-auto cursor-pointer ml-2 hover:text-red-600'
           onClick={handleAddToWishlist}
         />
       </div>

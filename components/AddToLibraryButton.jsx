@@ -4,7 +4,7 @@ import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 const AddToLibraryButton = ({ onClick }) => (
   <FontAwesomeIcon
     icon={faSquarePlus}
-    className='icon w-6 h-6 cursor-pointer hover:text-red-600'
+    className='icon w-3 sm:w-5 h-auto cursor-pointer hover:text-red-600'
     onClick={onClick}
   />
 );

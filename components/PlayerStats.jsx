@@ -164,6 +164,10 @@ const PlayerStats = () => {
     };
   }, [stats]);
 
+  if (!session) {
+    return <h2 className='text-red-600 mt-96'>Login to see your stats</h2>;
+  }
+
   if (loading)
     return (
       <div className='flex items-center justify-center h-full mt-40 sm:mt-0'>

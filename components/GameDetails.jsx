@@ -218,7 +218,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
           />
         </div>
         <div className='md:w-1/2 md:pl-6'>
-          <GameDetailsHeader game={game} />
+          <GameDetailsHeader game={game} wishlist={wishlist} />
           {!wishlist && (
             <GameFinishedStatus
               isEditing={isEditing}
