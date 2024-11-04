@@ -4,8 +4,6 @@ import UserGameSchema from '@/app/models/game';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
 import { getDlcDetails } from '@/utils/getDlcDetails'
-import { finished } from 'stream';
-
 
 
 export async function POST(req) {
@@ -34,12 +32,19 @@ export async function POST(req) {
 
         const dlcDetails = await getDlcDetails(dlc);
         const expansionsDetails = await getDlcDetails(expansions);
+        const platformsWithMedium = platforms.map((platform) => {
+            return {
+                id: platform.id,
+                name: platform.name,
+                medium: platform.medium,
+            };
+        });
 
         const newUserGame = await UserGameSchema.create({
             user_id: session.user.id,
             igdb_id,
             title,
-            platforms,
+            platforms: platformsWithMedium,
             genres,
             cover_image,
             rating,
@@ -57,6 +62,9 @@ export async function POST(req) {
             expansions: expansionsDetails,
             release_date,
             finished
+        }).catch(error => {
+            console.error('Error creating UserGame:', error);
+            throw error;
         });
 
         await User.findByIdAndUpdate(

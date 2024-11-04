@@ -6,6 +6,12 @@ const GameDetailsHeader = ({ game }) => {
         <strong>Platform:</strong>{' '}
         {game.platforms.map((p) => p.name).join(', ')}
       </p>
+
+      <p>
+        <strong>Medium:</strong>{' '}
+        {game.platforms.map((p) => p.medium).join(', ')}
+      </p>
+
       <p>
         <strong>Genres:</strong> {game.genres.map((g) => g.name).join(', ')}
       </p>

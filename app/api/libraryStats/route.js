@@ -42,6 +42,14 @@ export async function GET(req) {
         const platformsCount = {};
         const ratingsCount = Array(10).fill(0);  // Tablica dla ocen od 1 do 10
 
+        const physicalCount = userGames.reduce((count, game) => {
+            return count + game.platforms.filter(platform => platform.medium === 'physical').length;
+        }, 0);
+
+        const digitalCount = userGames.reduce((count, game) => {
+            return count + game.platforms.filter(platform => platform.medium === 'digital').length;
+        }, 0);
+
         userGames.forEach(game => {
             // Zbieranie unikalnych gatunków i ich liczba
             game.genres.forEach(genre => {
@@ -74,6 +82,8 @@ export async function GET(req) {
             }
         });
 
+
+
         // Statystyki do zwrócenia
         const stats = {
             totalGames,
@@ -87,6 +97,8 @@ export async function GET(req) {
             platforms: Array.from(platformsSet),
             totalPlatforms: platformsSet.size,
             platformsCount,
+            physicalGames: physicalCount,
+            digitalGames: digitalCount,
             averageRating: ratings.length > 0 ? (ratings.reduce((acc, curr) => acc + curr, 0) / ratings.length).toFixed(1) : null,
             ratings: ratingsCount,
             newestGame: userGames.reduce((latest, game) => {

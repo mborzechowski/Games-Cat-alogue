@@ -18,6 +18,7 @@ const UserGameSchema = new mongoose.Schema(
         platforms: [{
             id: Number,
             name: String,
+            medium: { type: String, enum: ['physical', 'digital'], required: true },
         }],
         genres: [{
             id: Number,

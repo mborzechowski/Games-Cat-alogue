@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { finished } from 'stream';
 
 const PlatformMenu = ({
   game,
@@ -13,12 +12,26 @@ const PlatformMenu = ({
   onClose,
 }) => {
   const [isCheckingLibrary, setIsCheckingLibrary] = useState(false);
-
+  const [hoveredPlatformId, setHoveredPlatformId] = useState(null);
+  const menuRef = useRef(null);
   useEffect(() => {
     if (isActive) {
       checkIfGameInLibrary(game.id);
     }
   }, [isActive]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const checkIfGameInLibrary = async (gameId) => {
     setIsCheckingLibrary(true);
@@ -34,7 +47,7 @@ const PlatformMenu = ({
     }
   };
 
-  const handlePlatformSelect = async (platform) => {
+  const handlePlatformSelect = async (platform, medium) => {
     if (!session) {
       toast.warn('You need to be logged in to add a game to your library.');
       return;
@@ -49,9 +62,18 @@ const PlatformMenu = ({
       const response = await axios.post('/api/addGame', {
         igdb_id: game.id,
         title: game.name,
-        platforms: [platform],
-        genres: game.genres.map((g) => ({ id: g.id, name: g.name })),
-        cover_image: game.cover.url,
+        platforms: [
+          {
+            id: platform.id,
+            name: platform.name,
+            medium,
+          },
+        ],
+        genres: game.genres
+          ? game.genres.map((g) => ({ id: g.id, name: g.name }))
+          : [],
+        cover_image:
+          game.cover && game.cover.url ? game.cover.url : '/temp_cover.png',
         rating: 0,
         personal_notes: 'My notes',
         lists: [],
@@ -99,8 +121,11 @@ const PlatformMenu = ({
 
   return (
     isActive && (
-      <div className='absolute left-0 mt-2 w-56 bg-black border border-red-600 rounded-md shadow-lg z-10 text-red-600'>
-        <div className='flex justify-between'>
+      <div
+        ref={menuRef}
+        className='absolute left-0 mt-2 w-56 bg-black border border-red-600 rounded-md shadow-lg z-10 text-red-600'
+      >
+        <div className='flex justify-between overflow-hidden'>
           <p className='text-xl px-2 pb-2'>...</p>
           <button
             className='text-red-500 hover:text-red-700 text-lg pr-2'
@@ -122,13 +147,33 @@ const PlatformMenu = ({
                     ? 'bg-gray-900 text-red-700 cursor-not-allowed'
                     : 'hover:bg-gray-800 cursor-pointer'
                 }`}
-                onClick={() => !isAdded && handlePlatformSelect(platform)}
+                onMouseEnter={() => setHoveredPlatformId(platform.id)}
+                onMouseLeave={() => setHoveredPlatformId(null)}
               >
-                {platform.name}{' '}
+                {platform.name}
                 {isAdded ? (
                   <FaCheckCircle className='text-red-600 ml-2 float-right' />
                 ) : (
-                  ''
+                  hoveredPlatformId === platform.id && (
+                    <div className=' absolute flex flex-col rounded-md overflow-hidden md:left-52 -left-16 -mt-7 bg-black border-red-600 border '>
+                      <button
+                        className='text-s px-4 pt-2 pb-1  text-red-600 hover:bg-gray-800 cursor-pointer'
+                        onClick={() =>
+                          handlePlatformSelect(platform, 'physical')
+                        }
+                      >
+                        Physical
+                      </button>
+                      <button
+                        className='text-s  px-4 py-1 text-red-600 hover:bg-gray-800 cursor-pointer'
+                        onClick={() =>
+                          handlePlatformSelect(platform, 'digital')
+                        }
+                      >
+                        Digital
+                      </button>
+                    </div>
+                  )
                 )}
               </div>
             );
