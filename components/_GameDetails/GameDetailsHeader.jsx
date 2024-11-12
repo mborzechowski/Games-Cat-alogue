@@ -1,15 +1,15 @@
-const GameDetailsHeader = ({ game, wishlist }) => {
+'use client';
+import { useRouter } from 'next/navigation';
+const GameDetailsHeader = ({ game, wishlist, onClose }) => {
   const date = new Date(game.release_date);
   const formattedDate = date.toLocaleDateString('pl-PL');
+  const router = useRouter();
 
   const handleRedirect = (paramType, paramValue) => {
-    const baseUrl = window.location.origin;
-    const url = `${baseUrl}/library?${paramType}=${encodeURIComponent(
-      paramValue
-    )}`;
-    window.location.href = url;
+    const url = `/library?${paramType}=${encodeURIComponent(paramValue)}`;
+    onClose();
+    router.push(url);
   };
-  console.log(game);
 
   return (
     <>

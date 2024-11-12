@@ -7,6 +7,8 @@ import { authOptions } from '@/utils/authOptions';
 export async function GET(req) {
     try {
         await connectDB();
+
+        // Pobieranie sesji użytkownika
         const session = await getServerSession(authOptions);
 
         if (!session || !session.user || !session.user.id) {
@@ -16,9 +18,10 @@ export async function GET(req) {
             });
         }
 
+        // Pobieranie gier użytkownika, z wykluczeniem listy 'wishlist'
         const userGames = await Game.find({
             user_id: session.user.id,
-            lists: { $ne: 'wishlist' }
+            lists: { $ne: 'wishlist' },
         }).exec();
 
         if (!userGames || userGames.length === 0) {
