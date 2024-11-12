@@ -32,13 +32,13 @@ export async function GET(req) {
         const totalGames = userGames.length;
         const completedGamesCount = userGames.filter(game => game.finished === true).length;
         const genresSet = new Set();
-        const publishersSet = new Set();
+        const developersSet = new Set();
         const platformsSet = new Set();
         const ratings = userGames.map(game => game.rating).filter(rating => rating != null);
 
         // Zmienne do liczenia wystąpień
         const genresCount = {};
-        const publishersCount = {};
+        const developerCount = {};
         const platformsCount = {};
         const ratingsCount = Array(10).fill(0);  // Tablica dla ocen od 1 do 10
 
@@ -59,11 +59,11 @@ export async function GET(req) {
                 }
             });
 
-            // Zbieranie unikalnych wydawców i ich liczba
-            game.publisher.forEach(publisher => {
-                if (publisher) {
-                    publishersSet.add(publisher);
-                    publishersCount[publisher] = (publishersCount[publisher] || 0) + 1;
+            // Zbieranie unikalnych deweloperów i ich liczba
+            game.developer.forEach(developer => {
+                if (developer) {
+                    developersSet.add(developer);
+                    developerCount[developer] = (developerCount[developer] || 0) + 1;
                 }
             });
 
@@ -82,8 +82,6 @@ export async function GET(req) {
             }
         });
 
-
-
         // Statystyki do zwrócenia
         const stats = {
             totalGames,
@@ -91,9 +89,9 @@ export async function GET(req) {
             genres: Array.from(genresSet),
             totalGenres: genresSet.size,
             genresCount,
-            publishers: Array.from(publishersSet),
-            totalPublishers: publishersSet.size,
-            publishersCount,
+            developers: Array.from(developersSet),
+            totalDevelopers: developersSet.size,
+            developerCount,
             platforms: Array.from(platformsSet),
             totalPlatforms: platformsSet.size,
             platformsCount,

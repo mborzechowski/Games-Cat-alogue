@@ -194,6 +194,12 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
               className='text-red-600 hover:text-red-700 cursor-pointer size-8 mr-2 mt-1'
             />
           ))}
+        {wishlist && (
+          <CiTrash
+            onClick={handleDelete}
+            className='text-red-600 cursor-pointer size-8 mr-1 mt-1'
+          />
+        )}
       </div>
 
       <div className='flex flex-col gap-4 md:flex-row mb-4'>

@@ -17,7 +17,12 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
 
     if (releaseDate && releaseDate !== 'unknown') {
       const releaseDateObject = new Date(releaseDate);
-      setIsReleased(releaseDateObject <= new Date());
+
+      if (!isNaN(releaseDateObject.getTime())) {
+        setIsReleased(releaseDateObject <= new Date());
+      } else {
+        setIsReleased(false);
+      }
     } else {
       setIsReleased(false);
     }
@@ -111,7 +116,9 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
       />
       <div className='relative bg-black rounded-r-xl p-2 pl-6 w-full sm:w-2/5'>
         <h2 className='lg:text-lg text-sm mt-2 mb-2 flex flex-col gap-1 items-center'>
-          <p>{game.name}</p>
+          <p className='truncate sm:max-w-xs max-w-[12rem]  px-2'>
+            {game.name}
+          </p>
           <p className='text-xs'>
             {game.release_dates && game.release_dates[0]?.human && (
               <> ({new Date(game.release_dates[0].human).getFullYear()})</>

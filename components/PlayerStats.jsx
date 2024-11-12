@@ -9,12 +9,12 @@ const PlayerStats = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const genreChartRef = useRef(null);
-  const publisherChartRef = useRef(null);
+  const developerChartRef = useRef(null);
   const platformChartRef = useRef(null);
   const ratingChartRef = useRef(null);
 
   const genreChartInstance = useRef(null);
-  const publisherChartInstance = useRef(null);
+  const developerChartInstance = useRef(null);
   const platformChartInstance = useRef(null);
   const ratingChartInstance = useRef(null);
 
@@ -103,23 +103,23 @@ const PlayerStats = () => {
     );
 
     // Wykres kołowy dla wydawców
-    const sortedPublishers = Object.entries(stats.publishersCount)
+    const sortedDeveloper = Object.entries(stats.developerCount)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 20);
 
-    const otherPublishersCount = Object.entries(stats.publishersCount)
+    const otherDeveloperCount = Object.entries(stats.developerCount)
       .slice(20)
       .reduce((acc, entry) => acc + entry[1], 0);
 
-    if (otherPublishersCount > 0) {
-      sortedPublishers.push(['Others', otherPublishersCount]);
+    if (otherDeveloperCount > 0) {
+      sortedDeveloper.push(['Others', otherDeveloperCount]);
     }
 
     initDoughnutChart(
-      publisherChartInstance,
-      publisherChartRef,
-      sortedPublishers.map((item) => item[1]),
-      sortedPublishers.map((item) => item[0])
+      developerChartInstance,
+      developerChartRef,
+      sortedDeveloper.map((item) => item[1]),
+      sortedDeveloper.map((item) => item[0])
     );
 
     // Wykres kołowy dla platform
@@ -156,8 +156,8 @@ const PlayerStats = () => {
     // Czyszczenie wykresów przy odmontowaniu komponentu
     return () => {
       if (genreChartInstance.current) genreChartInstance.current.destroy();
-      if (publisherChartInstance.current)
-        publisherChartInstance.current.destroy();
+      if (developerChartInstance.current)
+        developerChartInstance.current.destroy();
       if (platformChartInstance.current)
         platformChartInstance.current.destroy();
       if (ratingChartInstance.current) ratingChartInstance.current.destroy();
@@ -187,7 +187,9 @@ const PlayerStats = () => {
 
   return (
     <div className='bg-none text-white p-4 rounded-lg mt-4 '>
-      <h2 className='text-2xl font-semibold mb-4'>Library Stats</h2>
+      <h2 className='text-red-600 mt-20 sm:mt-10 lg:text-xl mb-8 lg:ml-0 text-lg ml-10'>
+        Library Stats
+      </h2>
 
       <div className='flex flex-col sm:flex-row gap-4'>
         <div className='flex flex-col gap-4 w-full sm:w-1/2'>
@@ -240,12 +242,10 @@ const PlayerStats = () => {
           </div>
         </div>
 
-        {/* Bar Chart: Ratings Distribution */}
         <div className='flex flex-col w-full sm:w-1/2'>
           <h3 className='text-xl font-bold mb-2'>Ratings</h3>
           <div className='mb-6'>
             <canvas ref={ratingChartRef} className='w-full h-64' />{' '}
-            {/* Ustalamy wysokość wykresu */}
           </div>
         </div>
       </div>
@@ -282,9 +282,9 @@ const PlayerStats = () => {
         </div>
 
         {/* Wykres kołowy: Popularni wydawcy */}
-        <h3 className='text-xl font-bold mb-2'>Publishers</h3>
+        <h3 className='text-xl font-bold mb-2'>Developer</h3>
         <div className='mb-6 sm:max-w-[40%]'>
-          <canvas ref={publisherChartRef} />
+          <canvas ref={developerChartRef} />
         </div>
 
         {/* Wykres kołowy: Popularne platformy */}
