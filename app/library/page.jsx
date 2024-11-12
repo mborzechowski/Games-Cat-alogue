@@ -1,7 +1,10 @@
+import { Suspense } from 'react';
 import LibraryList from '@/components/LibraryList';
 
-const LibraryPage = () => {
-  return <LibraryList></LibraryList>;
-};
-
-export default LibraryPage;
+export default function LibraryPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LibraryList />
+    </Suspense>
+  );
+}
