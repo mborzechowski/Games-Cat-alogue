@@ -77,9 +77,12 @@ const GameItem = ({ game, isActive, toggleMenu, toggleGameDetails }) => {
         expansions: game.expansions
           ? game.expansions.map((expansion) => expansion.name)
           : [],
-        release_date: game.release_dates[0].human
-          ? new Date(game.release_dates[0].human)
-          : null,
+        release_date:
+          game.release_dates &&
+          game.release_dates.length > 0 &&
+          game.release_dates[0].human
+            ? new Date(game.release_dates[0].human)
+            : null,
         finished: false,
       });
 

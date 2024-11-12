@@ -1,4 +1,6 @@
+import GalleryList from '@/components/GalleryList';
+
 const Gallery = () => {
-  return <div>Gallery</div>;
+  return <GalleryList></GalleryList>;
 };
 export default Gallery;

@@ -5,6 +5,7 @@ import Spinner from '@/components/Spinner';
 import GameDetails from '@/components/GameDetails';
 import { toast } from 'react-toastify';
 import { setTimeout } from 'timers';
+import { useSearchParams } from 'next/navigation';
 
 const LibraryList = () => {
   const { data: session, status } = useSession();
@@ -14,6 +15,17 @@ const LibraryList = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [showGameDetails, setShowGameDetails] = useState(false);
 
+  const searchParams = useSearchParams();
+  const platform = searchParams.get('platform');
+  const medium = searchParams.get('medium');
+  const genres = searchParams.get('genre');
+  const themes = searchParams.get('theme');
+  const gameModes = searchParams.get('gameModes');
+  const playerPerspectives = searchParams.get('playerPerspectives');
+  const franchises = searchParams.get('franchises');
+  const developer = searchParams.get('developer');
+  const publisher = searchParams.get('publisher');
+
   useEffect(() => {
     if (!session || status === 'loading') {
       return;
@@ -22,11 +34,27 @@ const LibraryList = () => {
     const fetchLibrary = async () => {
       setLoading(true);
       try {
-        const response = await fetch('/api/getLibrary?whislist=false');
+        const queryParams = new URLSearchParams();
+
+        if (platform) queryParams.set('platform', platform);
+        if (medium) queryParams.set('medium', medium);
+        if (genres) queryParams.set('genres', genres);
+        if (themes) queryParams.set('themes', themes);
+        if (gameModes) queryParams.set('gameModes', gameModes);
+        if (playerPerspectives)
+          queryParams.set('playerPerspectives', playerPerspectives);
+        if (franchises) queryParams.set('franchises', franchises);
+        if (developer) queryParams.set('developer', developer);
+        if (publisher) queryParams.set('publisher', publisher);
+
+        const url = `/api/getLibrary?${queryParams.toString()}`;
+
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+
         setGames(data);
       } catch (err) {
         toast.error('Error fetching library:', err);
@@ -37,7 +65,19 @@ const LibraryList = () => {
     };
 
     fetchLibrary();
-  }, [session, status]);
+  }, [
+    session,
+    status,
+    platform,
+    medium,
+    genres,
+    themes,
+    gameModes,
+    playerPerspectives,
+    franchises,
+    developer,
+    publisher,
+  ]);
 
   const handleGameClick = (game) => {
     setSelectedGame(game);
@@ -110,8 +150,7 @@ const LibraryList = () => {
               alt={game.title}
               className='rounded-lg w-20 h-auto'
             />
-            <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 pt-3 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300 '>
-              {game.title}
+            <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 pt-8 bg-black text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300 '>
               <p className='text-gray-400 text-center'>
                 {game.platforms.map((p) => p.name).join(', ')}
               </p>
