@@ -18,7 +18,7 @@ export async function GET(req) {
 
         const userGames = await Game.find({
             user_id: session.user.id,
-            lists: { $ne: 'whislist' }
+            lists: { $ne: 'wishlist' }
         }).exec();
 
         if (!userGames || userGames.length === 0) {
