@@ -13,6 +13,7 @@ const LibraryList = () => {
   const [loading, setLoading] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
   const [showGameDetails, setShowGameDetails] = useState(false);
+  const [queryParams, setQueryParams] = useState({});
 
   const searchParams = useSearchParams();
   const platform = searchParams.get('platform');
@@ -24,6 +25,20 @@ const LibraryList = () => {
   const franchises = searchParams.get('franchises');
   const developer = searchParams.get('developer');
   const publisher = searchParams.get('publisher');
+
+  useEffect(() => {
+    setQueryParams({
+      Platform: searchParams.get('platform'),
+      Medium: searchParams.get('medium'),
+      Genre: searchParams.get('genre'),
+      Themes: searchParams.get('theme'),
+      'Game Modes': searchParams.get('gameModes'),
+      'Player Perspectives': searchParams.get('playerPerspectives'),
+      Franchises: searchParams.get('franchises'),
+      Developer: searchParams.get('developer'),
+      Publisher: searchParams.get('publisher'),
+    });
+  }, [searchParams]);
 
   useEffect(() => {
     if (!session || status === 'loading') {
@@ -87,7 +102,7 @@ const LibraryList = () => {
     setShowGameDetails(false);
     setTimeout(() => {
       setSelectedGame(null);
-    }, 500);
+    }, 400);
   };
 
   const handleSave = (updatedGame) => {
@@ -114,8 +129,9 @@ const LibraryList = () => {
     return (
       <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32 '>
         <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-lg ml-10'>
-          Your Library
+          Your Library{' '}
         </h1>
+
         <div className='flex justify-center items-center mt-24'>
           <Spinner loading={true} />
         </div>
@@ -133,8 +149,16 @@ const LibraryList = () => {
 
   return (
     <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32 '>
-      <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-lg ml-10'>
+      <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-md ml-10 inline-block '>
         Your Library
+        {Object.entries(queryParams).map(
+          ([label, value]) =>
+            value && (
+              <span key={label}>
+                <strong> - {label} - </strong> {value}
+              </span>
+            )
+        )}
       </h1>
 
       <div className='flex flex-wrap gap-6 mb-8 justify-center lg:justify-normal '>
