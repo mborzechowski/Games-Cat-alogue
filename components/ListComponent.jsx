@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import GameDetails from '@/components/GameDetails';
+import { toast } from 'react-toastify';
 
 const Lists = () => {
   const [activeTab, setActiveTab] = useState('Wishlist');
@@ -57,6 +58,17 @@ const Lists = () => {
     }
   };
 
+  const generateShareableLink = () => {
+    if (session && activeTab) {
+      const userId = session.user.id;
+      const listType = activeTab;
+      return `${window.location.origin}/shared/${userId}/${encodeURIComponent(
+        listType
+      )}`;
+    }
+    return '';
+  };
+
   useEffect(() => {
     if (!session || status === 'loading') {
       return;
@@ -104,6 +116,7 @@ const Lists = () => {
                   onClose={handleCloseDetails}
                   onSave={handleSave}
                   onDelete={() => handleDeleteGame(selectedGame._id)}
+                  shared={false}
                 />
               </div>
             )}
@@ -133,7 +146,29 @@ const Lists = () => {
       </div>
 
       {session ? (
-        <div className='mt-4 p-4'>{renderContent()}</div>
+        <div className='mt-4 p-4'>
+          <div className='mb-4'>
+            <span className='text-sm text-gray-600'>Share your list: </span>
+            <button
+              onClick={() => {
+                const shareableLink = generateShareableLink();
+                navigator.clipboard
+                  .writeText(shareableLink)
+                  .then(() => {
+                    toast.success('Link copied!');
+                  })
+                  .catch((error) => {
+                    console.error('Failed to copy link:', error);
+                    toast.error('Failed to copy the link.');
+                  });
+              }}
+              className='pl-2 text-red-600 hover:text-red-700'
+            >
+              Copy link
+            </button>
+          </div>
+          {renderContent()}
+        </div>
       ) : (
         <h2 className='text-red-600 mt-44'>Login to see your list</h2>
       )}

@@ -13,7 +13,7 @@ import GameFinishedStatus from '@/components/_GameDetails/GameFinishedStatus';
 import GameRating from '@/components/_GameDetails/GameRating';
 import AdditionalImages from '@/components/_GameDetails/AdditionalImages';
 
-const GameDetails = ({ game, onClose, onSave, onDelete }) => {
+const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentGame, setCurrentGame] = useState(game);
   const [rating, setRating] = useState(game.rating || '');
@@ -177,6 +177,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
           onClick={onClose}
         />
         {!wishlist &&
+          !shared &&
           (isEditing ? (
             <>
               <TfiSave
@@ -194,7 +195,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete }) => {
               className='text-red-600 hover:text-red-700 cursor-pointer size-8 mr-2 mt-1'
             />
           ))}
-        {wishlist && (
+        {wishlist && !shared && (
           <CiTrash
             onClick={handleDelete}
             className='text-red-600 cursor-pointer size-8 mr-1 mt-1'
