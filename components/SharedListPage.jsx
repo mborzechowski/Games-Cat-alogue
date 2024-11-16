@@ -85,11 +85,11 @@ const SharedListPage = () => {
               alt={user.username}
               className='w-10 rounded-full'
             />
-            <h2>{user.firstName}'s </h2>
+            <h2>{user.firstName}&apos;s </h2>
           </div>
         )}
         <div>
-          Shared List -{' '}
+          Shared List -
           <span className='text-white'>{decodedListType || 'Loading...'}</span>
         </div>
       </h1>
