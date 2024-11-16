@@ -1,20 +1,24 @@
 import axios from 'axios';
 
-export async function POST(request) {
-    const { query } = await request.json();
+const formatDateToUnixTimestamp = (date) => {
+    return Math.floor(new Date(date).getTime() / 1000);
+};
+
+export async function POST(req) {
+    const { date } = await req.json();
 
     try {
+        const unixTimestamp = formatDateToUnixTimestamp(date);
         const accessToken = await getAccessToken();
 
         const response = await axios.post(
             'https://api.igdb.com/v4/games',
-            `search "${query}"; 
-        fields name, cover.url, genres.name, platforms.name, release_dates.human,
+            `fields name, cover.url, genres.name, platforms.name, release_dates.human,
            involved_companies.company.name, involved_companies.developer,
            involved_companies.publisher, summary, category, themes.name,
            game_modes.name, player_perspectives.name, franchises.name,
            dlcs, expansions;  
-    where category = (0,3, 4, 8, 9, 10, 11);
+    where first_release_date = ${unixTimestamp};
     limit 30;`,
             {
                 headers: {
@@ -29,6 +33,8 @@ export async function POST(request) {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });
+
+
     } catch (error) {
         console.error('Error fetching games:', error.response ? error.response.data : error.message);
         return new Response(
@@ -38,6 +44,7 @@ export async function POST(request) {
                 headers: { 'Content-Type': 'application/json' },
             }
         );
+
     }
 }
 

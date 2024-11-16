@@ -13,7 +13,6 @@ const SharedListPage = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [showGameDetails, setShowGameDetails] = useState(false);
   const [user, setUser] = useState(null);
-  const [userError, setUserError] = useState(null);
 
   useEffect(() => {
     if (userId && listType) {
