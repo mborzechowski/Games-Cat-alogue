@@ -10,19 +10,23 @@ const connectDB = async () => {
   mongoose.set('strictQuery', true);
 
   if (cached.conn) {
-    console.log('MongoDB is already connected');
     return cached.conn;
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(process.env.MONGODB_URI)
+    console.log('MongoDB: Attempting new connection...');
+    cached.promise = mongoose
+      .connect(process.env.MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      })
       .then((mongoose) => {
-        console.log('MongoDB connected...');
+        console.log('MongoDB: Connection successful.');
         return mongoose;
       })
       .catch((error) => {
-        console.error('Error connecting to MongoDB:', error);
-        throw new Error('MongoDB connection failed');
+        console.error('MongoDB: Connection failed.', error);
+        throw error;
       });
   }
 

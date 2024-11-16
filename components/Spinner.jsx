@@ -6,6 +6,7 @@ const override = {
 };
 
 const Spinner = ({ loading }) => {
+  if (!loading) return null;
   return (
     <PuffLoader
       color='#ff0000'

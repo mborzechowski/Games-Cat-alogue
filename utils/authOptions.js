@@ -19,21 +19,21 @@ export const authOptions = {
     callbacks: {
         async signIn({ profile }) {
             try {
-                // Connect to the database
+
                 await connectDB();
 
-                // Check if user exists in the database
-                const userExist = await User.findOne({ email: profile.email });
-
-                // If user does not exist, create a new user
-                if (!userExist) {
-                    const username = profile.name.slice(0, 20);
-                    await User.create({
-                        email: profile.email,
-                        username,
-                        image: profile.picture
-                    });
-                }
+                const username = profile.name.substring(0, 25);
+                await User.findOneAndUpdate(
+                    { email: profile.email },
+                    {
+                        $setOnInsert: {
+                            email: profile.email,
+                            username,
+                            image: profile.picture,
+                        }
+                    },
+                    { upsert: true, new: true }
+                );
 
                 return true;
             } catch (error) {
@@ -43,13 +43,17 @@ export const authOptions = {
         },
         async session({ session }) {
             try {
-                // Ensure database connection
+
                 await connectDB();
 
-                // Retrieve user data
-                const user = await User.findOne({ email: session.user.email });
-                session.user.id = user._id.toString();
 
+                const user = await User.findOne({ email: session.user.email }).select('_id');
+                if (!user) {
+                    console.warn(`No user found for email: ${session.user.email}`);
+                    return session;
+                }
+
+                session.user.id = user._id.toString();
                 return session;
             } catch (error) {
                 console.error('Error in session callback:', error);

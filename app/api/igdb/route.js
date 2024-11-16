@@ -1,21 +1,35 @@
 import axios from 'axios';
+const formatDateToUnixTimestamp = (date) => {
+    return Math.floor(new Date(date).getTime() / 1000);
+};
 
 export async function POST(request) {
-    const { query } = await request.json();
-
+    const { query, date } = await request.json();
+    console.log('Release Date Received:', date)
     try {
         const accessToken = await getAccessToken();
 
-        const response = await axios.post(
-            'https://api.igdb.com/v4/games',
-            `search "${query}"; 
+        let queryString = `search "${query}"; 
         fields name, cover.url, genres.name, platforms.name, release_dates.human,
            involved_companies.company.name, involved_companies.developer,
            involved_companies.publisher, summary, category, themes.name,
            game_modes.name, player_perspectives.name, franchises.name,
            dlcs, expansions;  
-    where category = (0,3, 4, 8, 9, 10, 11);
-    limit 30;`,
+        where category = (0,3, 4, 8, 9, 10, 11);`;
+
+
+
+        if (date) {
+            const unixTimestamp = formatDateToUnixTimestamp(date);
+            queryString += ` where first_release_date = ${unixTimestamp};`;
+        }
+
+
+        queryString += ` limit 30;`;
+
+        const response = await axios.post(
+            'https://api.igdb.com/v4/games',
+            queryString,
             {
                 headers: {
                     'Client-ID': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID,

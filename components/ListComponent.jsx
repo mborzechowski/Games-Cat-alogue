@@ -95,12 +95,11 @@ const Lists = () => {
                   className='rounded-lg w-20 h-auto'
                 />
                 <div
-                  className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 pt-3 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300'
+                  className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 pt-3 bg-black text-red-600 text-center text-xs rounded-lg opacity-0 sm:hover:opacity-100 sm:hover:bg-opacity-85 transition-opacity duration-300'
                   onClick={() => handleGameClick(game)}
                 >
                   {game.title}
                 </div>
-                <h2></h2>
               </div>
             ))}
             {selectedGame && (
