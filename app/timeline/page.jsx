@@ -1,6 +1,4 @@
-import Calendar from '../../components/Calendar';
-
 const Timeline = () => {
-  return <Calendar></Calendar>;
+  return;
 };
 export default Timeline;
