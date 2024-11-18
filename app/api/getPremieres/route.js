@@ -16,7 +16,7 @@ export async function POST(req) {
             `fields name, cover.url, genres.name, platforms.name, release_dates.human,
            involved_companies.company.name, involved_companies.developer,
            involved_companies.publisher, summary, category, themes.name,
-           game_modes.name, player_perspectives.name, franchises.name,
+           game_modes.name, player_perspectives.name, franchises.name,screenshots, screenshots.url, 
            dlcs, expansions;  
     where first_release_date = ${unixTimestamp};
     limit 30;`,

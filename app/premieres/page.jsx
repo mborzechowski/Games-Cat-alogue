@@ -1,6 +1,6 @@
-import Calendar from '@/components/Calendar';
+import PremieresPage from '@/components/PremieresPage';
 
 const Premieres = () => {
-  return <Calendar></Calendar>;
+  return <PremieresPage></PremieresPage>;
 };
 export default Premieres;

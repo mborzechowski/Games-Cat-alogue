@@ -4,6 +4,7 @@ import React from 'react';
 
 import { TfiGallery } from 'react-icons/tfi';
 import { BsClipboardData } from 'react-icons/bs';
+import { IoCalendarNumberOutline } from 'react-icons/io5';
 
 import { IoGameControllerOutline, IoListCircleOutline } from 'react-icons/io5';
 
@@ -13,6 +14,7 @@ const MainDashboard = ({ closeMenu }) => {
     { icon: BsClipboardData, label: 'Stats', href: '/stats' },
     { icon: IoListCircleOutline, label: 'Lists', href: '/lists' },
     { icon: TfiGallery, label: 'Gallery', href: '/gallery' },
+    { icon: IoCalendarNumberOutline, label: 'Premieres', href: '/premieres' },
   ];
 
   return (
