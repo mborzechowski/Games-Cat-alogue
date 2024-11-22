@@ -7,9 +7,12 @@ import Image from 'next/image';
 import WishlistButton from './WishlistButton';
 
 const PremieresPage = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(
+    format(new Date(), 'yyyy-MM-dd')
+  );
   const [gamesForSelectedDate, setGamesForSelectedDate] = useState([]);
   const [loading, setLoading] = useState(true);
+  console.log(selectedDate);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +44,7 @@ const PremieresPage = () => {
   };
 
   const handleDayClick = async (day) => {
-    setSelectedDate(day);
+    setSelectedDate(format(day, 'yyyy-MM-dd'));
     const games = await fetchGamesForDate(day);
     setGamesForSelectedDate(games);
   };
@@ -60,7 +63,7 @@ const PremieresPage = () => {
       });
 
       const games = await response.json();
-      console.log('Games fetched:', games);
+
       return games;
     } catch (error) {
       console.error('Error fetching games:', error);
@@ -74,18 +77,20 @@ const PremieresPage = () => {
     return (
       <div className='flex gap-4 flex-wrap overflow-x-auto scrollbar-none'>
         {days.map((day) => {
-          const isInCurrentMonth = isToday(day);
+          const formattedDay = format(day, 'yyyy-MM-dd');
+          const isSelected = formattedDay === selectedDate;
+
           return (
             <div
               key={day}
               onClick={() => handleDayClick(day)}
-              className={`relative bg-zinc-900 rounded-md w-auto h-auto flex items-start justify-start p-8 ${
-                isInCurrentMonth ? 'text-red-600' : 'text-gray-300'
+              className={`relative w-auto h-auto flex items-center justify-center p-4 cursor-pointer hover:text-red-600 border-b-2 ${
+                isSelected
+                  ? 'border-red-600 text-red-600'
+                  : 'border-transparent text-gray-600'
               }`}
             >
-              <span className='absolute top-2 left-2 text-sm font-bold'>
-                {format(day, 'dd.MM')}
-              </span>
+              <span className=' text-sm font-bold'>{format(day, 'dd.MM')}</span>
             </div>
           );
         })}
@@ -104,12 +109,11 @@ const PremieresPage = () => {
     if (gamesForSelectedDate.length === 0) {
       return <p>No games released on this day.</p>;
     }
-    console.log(gamesForSelectedDate);
 
     return (
       <div>
         <h3 className='my-6 text-xl'>
-          Games Released on {format(selectedDate, 'MMMM dd, yyyy')}
+          Games releasing on {format(selectedDate, 'MMMM dd, yyyy')}
         </h3>
         <ul className='grid grid-cols-1 gap-4'>
           {gamesForSelectedDate.map((game, index) => (
@@ -124,7 +128,7 @@ const PremieresPage = () => {
                 className='w-1/4 md:w-1/6 rounded-md'
               />
               <div>
-                <div className='font-bold '>
+                <div className='font-bold flex   '>
                   {game.name}
                   <WishlistButton game={game} />
                 </div>

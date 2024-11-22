@@ -1,10 +1,12 @@
 'use client';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 const GalleryList = () => {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -26,6 +28,10 @@ const GalleryList = () => {
   const handleCloseDetails = () => {
     setSelectedGame(null);
   };
+
+  if (!session) {
+    return <h2 className='text-red-600 mt-96'>Login to see your Gallery</h2>;
+  }
 
   return (
     <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32'>

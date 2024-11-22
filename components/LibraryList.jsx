@@ -121,24 +121,6 @@ const LibraryList = () => {
     handleCloseDetails();
   };
 
-  if (status === 'loading') {
-    return null;
-  }
-
-  if (loading) {
-    return (
-      <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32 '>
-        <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-lg ml-10'>
-          Your Library{' '}
-        </h1>
-
-        <div className='flex justify-center items-center mt-24'>
-          <Spinner loading={true} />
-        </div>
-      </div>
-    );
-  }
-
   if (!session) {
     return <h2 className='text-red-600 mt-96'>Login to see your library</h2>;
   }
@@ -149,8 +131,13 @@ const LibraryList = () => {
 
   return (
     <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32 '>
-      <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-md ml-10 inline-block '>
+      <div className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-md ml-10 inline-block '>
         Your Library
+        {loading && (
+          <div className='flex justify-center items-center mt-24'>
+            <Spinner loading={true} />
+          </div>
+        )}
         {Object.entries(queryParams).map(
           ([label, value]) =>
             value && (
@@ -159,7 +146,7 @@ const LibraryList = () => {
               </span>
             )
         )}
-      </h1>
+      </div>
 
       <div className='flex flex-wrap gap-6 mb-8 justify-center lg:justify-normal '>
         {games.map((game) => (
