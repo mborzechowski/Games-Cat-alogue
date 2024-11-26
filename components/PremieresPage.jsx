@@ -5,6 +5,7 @@ import { format, addDays, isToday } from 'date-fns';
 import Spinner from './Spinner';
 import Image from 'next/image';
 import WishlistButton from './WishlistButton';
+import PremieresList from './_PremieresPage/PremieresList';
 
 const PremieresPage = () => {
   const [selectedDate, setSelectedDate] = useState(
@@ -111,81 +112,10 @@ const PremieresPage = () => {
     }
 
     return (
-      <div>
-        <h3 className='my-6 text-xl'>
-          Games releasing on {format(selectedDate, 'MMMM dd, yyyy')}
-        </h3>
-        <ul className='grid grid-cols-1 gap-4'>
-          {gamesForSelectedDate.map((game, index) => (
-            <li key={index} className='mb-4 flex gap-4 p-2 w-full'>
-              <img
-                src={
-                  game.cover
-                    ? game.cover.url.replace('t_thumb', 't_cover_big')
-                    : '/temp_cover.png'
-                }
-                alt={game.name}
-                className='w-1/4 md:w-1/6 rounded-md'
-              />
-              <div>
-                <div className='font-bold flex   '>
-                  {game.name}
-                  <WishlistButton game={game} />
-                </div>
-
-                <p>
-                  <strong>Platform:</strong>{' '}
-                  {game.platforms.length > 0 &&
-                    game.platforms
-                      .map((p, index) => <span key={index}>{p.name}</span>)
-                      .reduce((prev, curr) => [prev, ', ', curr])}
-                </p>
-                <div className='hidden md:flex flex-col'>
-                  {game.genres && game.genres.length > 0 && (
-                    <div>
-                      <strong>Genres:</strong>{' '}
-                      {game.genres
-                        .map((g, index) => <span key={index}>{g.name}</span>)
-                        .reduce((prev, curr) => [prev, ', ', curr])}
-                    </div>
-                  )}
-                  <div>
-                    {game.summary && <strong>Summary:</strong>}
-                    {game.summary}
-                  </div>
-
-                  {game.screenshots && game.screenshots.length > 0 && (
-                    <div className='mt-4 '>
-                      <h4 className='text-lg font-semibold'>Screenshots:</h4>
-                      <div className='flex gap- flex-wrap'>
-                        {game.screenshots
-                          .slice(0, 5)
-                          .map((screenshot, screenshotIndex) => (
-                            <div
-                              key={screenshotIndex}
-                              className='relative w-32 h-32 flex-shrink-0'
-                            >
-                              <Image
-                                src={`https:${screenshot.url.replace(
-                                  't_thumb',
-                                  't_screenshot_med'
-                                )}`}
-                                alt={`Screenshot ${screenshotIndex + 1}`}
-                                width={120}
-                                height={120}
-                                className='rounded-md'
-                              />
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <PremieresList
+        selectedDate={selectedDate}
+        gamesForSelectedDate={gamesForSelectedDate}
+      ></PremieresList>
     );
   };
 

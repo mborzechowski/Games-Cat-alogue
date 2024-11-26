@@ -16,10 +16,7 @@ const connectDB = async () => {
   if (!cached.promise) {
     console.log('MongoDB: Attempting new connection...');
     cached.promise = mongoose
-      .connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      })
+      .connect(process.env.MONGODB_URI)
       .then((mongoose) => {
         console.log('MongoDB: Connection successful.');
         return mongoose;
