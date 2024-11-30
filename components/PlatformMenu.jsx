@@ -123,7 +123,7 @@ const PlatformMenu = ({
     isActive && (
       <div
         ref={menuRef}
-        className='absolute left-0 mt-2 w-56 bg-black border border-red-600 rounded-md shadow-lg z-10 text-red-600'
+        className='absolute left-0 mt-2 ml-2 w-52 bg-black border border-red-600 rounded-md shadow-lg z-50 text-red-600'
       >
         <div className='flex justify-between overflow-hidden'>
           <p className='text-xl px-2 pb-2'>...</p>
@@ -155,7 +155,7 @@ const PlatformMenu = ({
                   <FaCheckCircle className='text-red-600 ml-2 float-right' />
                 ) : (
                   hoveredPlatformId === platform.id && (
-                    <div className=' absolute flex flex-col rounded-md overflow-hidden md:left-52 -left-16 -mt-7 bg-black border-red-600 border '>
+                    <div className=' absolute flex flex-col rounded-md overflow-hidden md:left-48 -left-16 -mt-7 bg-black border-red-600 border '>
                       <button
                         className='text-s px-4 pt-2 pb-1  text-red-600 hover:bg-gray-800 cursor-pointer'
                         onClick={() =>

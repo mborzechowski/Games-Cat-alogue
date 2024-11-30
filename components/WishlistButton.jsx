@@ -1,11 +1,43 @@
+'use client';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeartCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faHeartCirclePlus,
+  faCheckCircle,
+} from '@fortawesome/free-solid-svg-icons';
+import { useState, useEffect } from 'react';
 
 const WishlistButton = ({ game }) => {
   const { data: session } = useSession();
+  const [isCheckingWishlist, setIsCheckingWishlist] = useState(false);
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [isInDatabase, setIsInDatabase] = useState(false);
+
+  const checkIfGameInWishlist = async (gameId) => {
+    setIsCheckingWishlist(true);
+    try {
+      const response = await axios.get(
+        `/api/checkGameWishlist?igdb_id=${gameId}`
+      );
+      const { isOnWishlist, isInDatabase } = response.data;
+
+      setIsInWishlist(isOnWishlist);
+      setIsInDatabase(isInDatabase);
+    } catch (error) {
+      console.error('Error checking wishlist:', error);
+      toast.error('Failed to check wishlist status.');
+    } finally {
+      setIsCheckingWishlist(false);
+    }
+  };
+
+  useEffect(() => {
+    if (game?.id) {
+      checkIfGameInWishlist(game.id);
+    }
+  }, [game?.id]);
 
   const handleAddToWishlist = async () => {
     if (!session) {
@@ -78,12 +110,18 @@ const WishlistButton = ({ game }) => {
     }
   };
 
-  return (
+  return !isInDatabase || isInWishlist ? (
     <FontAwesomeIcon
-      icon={faHeartCirclePlus}
-      className='icon w-4 sm:w-6 h-auto cursor-pointer ml-3 hover:text-red-600'
-      onClick={handleAddToWishlist}
+      icon={isInWishlist ? faCheckCircle : faHeartCirclePlus}
+      className={`icon w-4 sm:w-6 h-auto cursor-pointer ml-3 ${
+        isInWishlist ? 'text-red-500 cursor-default' : 'hover:text-red-600'
+      }`}
+      onClick={!isInWishlist ? handleAddToWishlist : undefined}
     />
+  ) : (
+    <div className='w-4 sm:w-6 h-auto ml-3 opacity-0'>
+      <FontAwesomeIcon icon={faHeartCirclePlus} />
+    </div>
   );
 };
 
