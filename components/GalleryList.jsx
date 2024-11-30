@@ -2,11 +2,16 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import { TfiClose } from 'react-icons/tfi';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
+import Image from 'next/image';
 
 const GalleryList = () => {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
   const { data: session } = useSession();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -29,6 +34,25 @@ const GalleryList = () => {
     setSelectedGame(null);
   };
 
+  const openModal = (index) => {
+    setCurrentIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
+
+  const nextImage = () => {
+    setCurrentIndex(
+      (prevIndex) => (prevIndex + 1) % selectedGame.additional_img.length
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? selectedGame.additional_img.length - 1 : prevIndex - 1
+    );
+  };
+
   if (!session) {
     return <h2 className='text-red-600 mt-96'>Login to see your Gallery</h2>;
   }
@@ -36,7 +60,7 @@ const GalleryList = () => {
   return (
     <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32'>
       <h1 className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-lg ml-10'>
-        Games with Additional Images
+        Your Images
       </h1>
 
       <div className='flex flex-wrap gap-6 mb-8 justify-center lg:justify-normal'>
@@ -55,33 +79,62 @@ const GalleryList = () => {
                 alt={game.title}
                 className='rounded-lg w-20 h-auto'
               />
-              <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 px-2 pt-8 bg-black text-center text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300'>
-                <p className='text-gray-400 text-center'>{game.title}</p>
+              <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 text-center pt-2 bg-black text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300'>
+                <p className='text-gray-300'>{game.title}</p>
               </div>
             </div>
           ))}
       </div>
 
       {selectedGame && (
-        <div className=' inset-20 flex items-center justify-center p-4 w-2/3'>
-          <div className='bg-white p-6 rounded-lg max-h-[80vh] overflow-y-auto'>
-            <h2 className='text-xl font-semibold mb-4'>{selectedGame.title}</h2>
-            <div className='grid grid-cols-3 gap-4'>
+        <div className='flex absolute top-16 left-0 md:left-96 w-auto md:w-2/3'>
+          <div className='bg-black p-8 md:rounded-lg max-h-[80vh] overflow-y-auto'>
+            <div className='flex justify-between'>
+              <h2 className='text-xl font-semibold mb-4'>
+                {selectedGame.title}
+              </h2>
+              <TfiClose
+                className='text-red-600 hover:text-red-700 cursor-pointer size-6 mr-2'
+                onClick={handleCloseDetails}
+              />
+            </div>
+            <div className='grid grid-cols-2 md:grid-cols-5 gap-4'>
               {selectedGame.additional_img.map((image, index) => (
                 <img
                   key={index}
                   src={image.url}
                   alt={`Additional Image ${index + 1}`}
                   className='w-full h-auto rounded-lg'
+                  onClick={() => openModal(index)}
                 />
               ))}
             </div>
-            <button
-              onClick={handleCloseDetails}
-              className='mt-4 text-red-600 hover:underline'
-            >
-              Close
-            </button>
+          </div>
+        </div>
+      )}
+      {isModalOpen && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75'>
+          <div className='relative w-[90%] max-w-4xl'>
+            <Image
+              src={selectedGame.additional_img[currentIndex].url}
+              alt={`Image ${currentIndex + 1}`}
+              width={1024}
+              height={800}
+              className='rounded-md'
+            />
+
+            <TfiClose
+              className='absolute md:top-1 md:-right-10 right-[50%] text-red-500 hover:text-red-700 bg-black p-1 rounded-md size-8 cursor-pointer'
+              onClick={closeModal}
+            />
+            <FaChevronLeft
+              className='absolute md:top-[50%] md:-left-20 text-red-500 hover:text-red-700 md:size-12 size-7 cursor-pointer'
+              onClick={prevImage}
+            />
+            <FaChevronRight
+              className='absolute md:top-[50%] md:-right-20 right-0 text-red-500 hover:text-red-700 md:size-12 size-7 cursor-pointer'
+              onClick={nextImage}
+            />
           </div>
         </div>
       )}

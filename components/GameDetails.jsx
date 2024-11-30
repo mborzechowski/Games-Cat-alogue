@@ -149,6 +149,8 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
       console.error('Error saving changes:', error);
       toast.error('An error occurred while saving changes');
     }
+
+    setSelectedFile(null);
   };
 
   const handleFileChange = async (e) => {
@@ -248,6 +250,7 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
       </div>
 
       <GameExpansionsAndDlc expansions={game.expansions} dlc={game.dlc} />
+
       <GameSummary summary={game.summary} />
       <AdditionalImages
         images={currentGame.additional_img}

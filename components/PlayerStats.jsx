@@ -223,7 +223,7 @@ const PlayerStats = () => {
             {changingDiv ? (
               <>
                 <p className='text-lg font-bold mt-6 text-red-800'>
-                  Latest Added Game:
+                  New in Catalogue:
                 </p>
                 <p className='text-red-800'>
                   {stats.newestGame || 'No games available'}
