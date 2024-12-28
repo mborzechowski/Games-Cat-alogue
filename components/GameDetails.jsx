@@ -26,6 +26,10 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
   const [wishlist, setWishlist] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const [showPlatformList, setShowPlatformList] = useState(false);
+  const [hoveredPlatformId, setHoveredPlatformId] = useState(null);
+  const [checkedPlatforms, setCheckedPlatforms] = useState([]);
+
   const detailsRef = useRef(null);
 
   useEffect(() => {
@@ -59,6 +63,10 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [onClose]);
+
+  const handlePlatformSelect = (platform, type) => {
+    console.log(`Selected platform: ${platform.name}, Type: ${type}`);
+  };
 
   const handleAddToList = async (listName) => {
     let updatedLists;
@@ -198,10 +206,55 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
             />
           ))}
         {wishlist && !shared && (
-          <CiTrash
-            onClick={handleDelete}
-            className='text-red-600 cursor-pointer size-8 mr-1 mt-1'
-          />
+          <>
+            <CiTrash
+              onClick={handleDelete}
+              className='text-red-600 cursor-pointer size-8 mr-1 mt-1'
+            />
+            <button
+              onClick={() => setShowPlatformList(!showPlatformList)}
+              className='mt-2 px-4 py-2 bg-gray-800 text-red-600 rounded-lg hover:bg-gray-700'
+            >
+              To Library
+            </button>
+          </>
+        )}
+
+        {showPlatformList && game.platforms && game.platforms.length > 0 && (
+          <div className='mt-4 overflow-hidden  rounded-lg border-red-600 border'>
+            {game.platforms.map((platform) => {
+              return (
+                <div
+                  key={platform.id}
+                  className='text-s px-4 pt-2 pb-1 text-red-600 hover:bg-gray-800 cursor-pointer'
+                  onMouseEnter={() => setHoveredPlatformId(platform.id)}
+                  onMouseLeave={() => setHoveredPlatformId(null)}
+                >
+                  {platform.name}
+                  {hoveredPlatformId === platform.id && (
+                    <div className='absolute flex flex-col rounded-md -ml-16 overflow-hidden bg-black border-red-600 border'>
+                      <button
+                        className='text-s px-4 pt-2 pb-1 text-red-600 hover:bg-gray-800 cursor-pointer'
+                        onClick={() =>
+                          handlePlatformSelect(platform, 'physical')
+                        }
+                      >
+                        Physical
+                      </button>
+                      <button
+                        className='text-s px-4 py-1 text-red-600 hover:bg-gray-800 cursor-pointer'
+                        onClick={() =>
+                          handlePlatformSelect(platform, 'digital')
+                        }
+                      >
+                        Digital
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
 
