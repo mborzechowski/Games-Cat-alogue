@@ -5,6 +5,7 @@ import Spinner from '@/components/Spinner';
 import GameDetails from '@/components/GameDetails';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
+import CustomSelect from '@/components/CustomSelect';
 
 const LibraryList = () => {
   const { data: session, status } = useSession();
@@ -14,6 +15,7 @@ const LibraryList = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [showGameDetails, setShowGameDetails] = useState(false);
   const [queryParams, setQueryParams] = useState({});
+  const [sortBy, setSortBy] = useState('Title');
 
   const searchParams = useSearchParams();
   const platform = searchParams.get('platform');
@@ -68,8 +70,8 @@ const LibraryList = () => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-
-        setGames(data);
+        const games = data.sort((a, b) => a.title.localeCompare(b.title));
+        setGames(games);
       } catch (err) {
         toast.error('Error fetching library:', err);
         setError('Failed to load library.');
@@ -92,6 +94,33 @@ const LibraryList = () => {
     developer,
     publisher,
   ]);
+
+  useEffect(() => {
+    if (games.length > 0) {
+      const sortedGames = [...games];
+      if (sortBy === 'Title') {
+        sortedGames.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (sortBy === 'Release Date') {
+        sortedGames.sort(
+          (a, b) =>
+            new Date(a.release_date).getTime() -
+            new Date(b.release_date).getTime()
+        );
+      } else if (sortBy === 'Added Date') {
+        sortedGames.sort(
+          (a, b) =>
+            new Date(a.date_added).getTime() - new Date(b.date_added).getTime()
+        );
+      } else if (sortBy === 'Rating') {
+        sortedGames.sort((a, b) => a.rating - b.rating);
+      }
+      setGames(sortedGames);
+    }
+  }, [sortBy]);
+
+  const handleSortChange = (value) => {
+    setSortBy(value);
+  };
 
   const handleGameClick = (game) => {
     setSelectedGame(game);
@@ -131,20 +160,32 @@ const LibraryList = () => {
 
   return (
     <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32 '>
-      <div className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-md ml-10 inline-block '>
-        Your Library
-        {loading && (
-          <div className='flex justify-center items-center mt-24'>
-            <Spinner loading={true} />
+      <div className='flex justify-between'>
+        <div className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-md ml-10 inline-block '>
+          Your Library
+          {loading && (
+            <div className='flex justify-center items-center mt-24'>
+              <Spinner loading={true} />
+            </div>
+          )}
+          {Object.entries(queryParams).map(
+            ([label, value]) =>
+              value && (
+                <span key={label}>
+                  <strong> - {label} - </strong> {value}
+                </span>
+              )
+          )}
+        </div>
+        {!loading && (
+          <div className='lg:mt-48 mt-20 mr-10 flex justify-start'>
+            <div className='px-2 py-2 text-xs text-red-600'>Sort by</div>
+            <CustomSelect
+              value={sortBy}
+              onChange={handleSortChange}
+              options={['Title', 'Release Date', 'Added Date', 'Rating']}
+            />
           </div>
-        )}
-        {Object.entries(queryParams).map(
-          ([label, value]) =>
-            value && (
-              <span key={label}>
-                <strong> - {label} - </strong> {value}
-              </span>
-            )
         )}
       </div>
 

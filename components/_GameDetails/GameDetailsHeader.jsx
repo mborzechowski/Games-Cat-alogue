@@ -73,7 +73,7 @@ const GameDetailsHeader = ({ game, wishlist, onClose }) => {
               {g.name}
             </span>
           ))
-          .reduce((prev, curr) => [prev, ', ', curr])}
+          .reduce((prev, curr) => [prev, ', ', curr], [])}
       </p>
 
       {game.themes && game.themes.length > 0 && (
