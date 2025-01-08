@@ -63,7 +63,7 @@ const GalleryList = () => {
         Your Images
       </h1>
 
-      <div className='flex flex-wrap gap-6 mb-8 justify-center lg:justify-normal'>
+      <div className='flex flex-wrap gap-1 mb-8 justify-center lg:justify-normal'>
         {games
           .filter(
             (game) => game.additional_img && game.additional_img.length > 0
@@ -75,13 +75,10 @@ const GalleryList = () => {
               onClick={() => handleGameClick(game)}
             >
               <img
-                src={game.cover_image}
+                src={game.cover_image.replace('t_thumb', 't_cover_big')}
                 alt={game.title}
-                className='rounded-lg w-20 h-auto'
+                className=' w-20 h-20 object-cover transition duration-300 transform hover:scale-105'
               />
-              <div className='absolute left-1/2 transform -translate-x-1/2 w-full h-full top-0 text-center pt-2 bg-black text-xs rounded-lg opacity-0 hover:opacity-100 hover:bg-opacity-85 transition-opacity duration-300'>
-                <p className='text-gray-300'>{game.title}</p>
-              </div>
             </div>
           ))}
       </div>

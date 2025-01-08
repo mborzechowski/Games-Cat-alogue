@@ -178,8 +178,8 @@ const LibraryList = () => {
           )}
         </div>
         {!loading && (
-          <div className='lg:mt-48 mt-20 mr-10 flex justify-start'>
-            <div className='px-2 py-2 text-xs text-red-600'>Sort by</div>
+          <div className='lg:mt-48 mt-20 mr-10 flex items-center justify-items-end'>
+            <div className='px-2 py-2 text-xs text-red-600 w-20'>Sort by</div>
             <CustomSelect
               value={sortBy}
               onChange={handleSortChange}
