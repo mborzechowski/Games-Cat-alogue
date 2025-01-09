@@ -20,15 +20,12 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
   const [note, setNote] = useState('');
   const [selectedLists, setSelectedLists] = useState([]);
   const [hoverRating, setHoverRating] = useState(0);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [finished, setFinished] = useState(null);
-  const [fileData, setFileData] = useState(null);
   const [wishlist, setWishlist] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
   const [showPlatformList, setShowPlatformList] = useState(false);
   const [hoveredPlatformId, setHoveredPlatformId] = useState(null);
-  const [checkedPlatforms, setCheckedPlatforms] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const detailsRef = useRef(null);
 
@@ -129,18 +126,22 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
 
   const handleSave = async () => {
     try {
+      const formData = new FormData();
+
+      formData.append('gameId', currentGame._id);
+      formData.append('rating', rating);
+      formData.append('note', note);
+      formData.append('finished', finished !== null ? finished : false);
+
+      if (selectedFiles.length > 0) {
+        selectedFiles.forEach((file) => {
+          formData.append('files', file);
+        });
+      }
+
       const response = await fetch('/api/updateGame', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          gameId: currentGame._id,
-          rating,
-          note,
-          finished,
-          fileData,
-        }),
+        body: formData,
       });
 
       const updatedGame = await response.json();
@@ -156,20 +157,15 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
     } catch (error) {
       console.error('Error saving changes:', error);
       toast.error('An error occurred while saving changes');
+    } finally {
+      setSelectedFiles([]);
     }
-
-    setSelectedFile(null);
   };
 
   const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedFile(file.name);
-        setFileData(reader.result);
-      };
-      reader.readAsDataURL(file);
+    const files = Array.from(e.target.files);
+    if (files) {
+      setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
     }
   };
 
@@ -294,7 +290,6 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
             note={note}
             setNote={setNote}
             handleFileChange={handleFileChange}
-            selectedFile={selectedFile}
             selectedLists={selectedLists}
             handleAddToList={handleAddToList}
             isEditing={isEditing}

@@ -1,10 +1,9 @@
 import connectDB from '@/config/mongodb';
-import User from '@/app/models/user';
 import UserGame from '@/app/models/game';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/utils/authOptions';
 import cloudinary from '@/config/cloudinary';
-import { log } from 'console';
+
 
 export async function PUT(req) {
     try {
@@ -19,7 +18,13 @@ export async function PUT(req) {
             });
         }
 
-        const { gameId, rating, note, fileData, lists, finished } = await req.json();
+        const formData = await req.formData();
+        const gameId = formData.get('gameId');
+        const rating = formData.get('rating');
+        const note = formData.get('note');
+        const finished = formData.get('finished');
+        const lists = JSON.parse(formData.get('lists') || '[]');
+        const files = formData.getAll('files');
 
 
 
@@ -57,18 +62,26 @@ export async function PUT(req) {
             game.finished = finished
         }
 
-        if (fileData) {
-            const base64Data = fileData.split(',')[1];
-            const uploadResponse = await cloudinary.uploader.upload(`data:image/png;base64,${base64Data}`, {
-                folder: 'catalogue',
-                upload_preset: 'catalogue',
-            });
-            console.log("secure url", uploadResponse.secure_url);
+        if (files && files.length > 0) {
+            for (const file of files) {
+                const fileBuffer = await file.arrayBuffer();
+                const base64Data = Buffer.from(fileBuffer).toString('base64');
+                const mimeType = file.type;
 
-            game.additional_img.push({
-                url: uploadResponse.secure_url,
-                uploaded_at: new Date()
-            });
+                const uploadResponse = await cloudinary.uploader.upload(
+                    `data:${mimeType};base64,${base64Data}`,
+                    {
+                        folder: 'catalogue',
+                        upload_preset: 'catalogue',
+                    }
+                );
+
+
+                game.additional_img.push({
+                    url: uploadResponse.secure_url,
+                    uploaded_at: new Date(),
+                });
+            }
         }
 
         await game.save();

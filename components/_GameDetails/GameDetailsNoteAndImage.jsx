@@ -1,14 +1,22 @@
 import { FaCheckCircle } from 'react-icons/fa';
+import { useState } from 'react';
 
 const GameDetailsNoteAndImage = ({
   note,
   setNote,
   handleFileChange,
-  selectedFile,
   selectedLists,
   handleAddToList,
   isEditing,
 }) => {
+  const [selectedFileCount, setSelectedFileCount] = useState(0);
+
+  const handleFileSelection = (e) => {
+    const files = e.target.files;
+    setSelectedFileCount(files.length);
+    handleFileChange(e);
+  };
+
   if (!isEditing) return null;
 
   return (
@@ -23,20 +31,22 @@ const GameDetailsNoteAndImage = ({
       </div>
 
       <div className='mt-4 flex items-center'>
-        <strong className='text-red-600 mr-2'>Add Image:</strong>
+        <strong className='text-red-600 mr-2'>Add Images:</strong>
         <div className='relative'>
           <input
             type='file'
-            onChange={handleFileChange}
+            multiple
+            accept='image/*'
+            onChange={handleFileSelection}
             className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
           />
           <button className='cursor-pointer flex items-center justify-center bg-gblack text-white w-24 text-sm border-b-2 border-r-2 rounded-xl border-red-600'>
-            Choose file
+            Choose files
           </button>
         </div>
-        {selectedFile && (
+        {selectedFileCount > 0 && (
           <span className='ml-2 text-sm text-red-600 font-semibold'>
-            {selectedFile}
+            {selectedFileCount} {selectedFileCount === 1 ? 'file' : 'files'}
           </span>
         )}
       </div>
