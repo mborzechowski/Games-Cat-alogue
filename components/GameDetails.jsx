@@ -85,22 +85,21 @@ const GameDetails = ({ game, onClose, onSave, onDelete, shared }) => {
 
     setSelectedLists(updatedLists);
 
+    const formData = new FormData();
+    formData.append('gameId', currentGame._id);
+    formData.append('lists', JSON.stringify(mappedLists));
+
     try {
       const response = await fetch('/api/updateGame', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          gameId: currentGame._id,
-          lists: mappedLists,
-        }),
+        body: formData,
       });
 
+      const data = await response.json();
       if (response.ok) {
-        toast.success('Game lists updated successfully!');
       } else {
-        throw new Error('Failed to update lists');
+        console.error('Response error:', data);
+        throw new Error(data.message || 'Failed to update lists');
       }
     } catch (error) {
       console.error('Error updating lists:', error);

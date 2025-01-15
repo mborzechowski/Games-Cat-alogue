@@ -19,11 +19,12 @@ export async function PUT(req) {
         }
 
         const formData = await req.formData();
+        console.log('Form Data:', Array.from(formData.entries()));
         const gameId = formData.get('gameId');
         const rating = formData.get('rating');
         const note = formData.get('note');
         const finished = formData.get('finished');
-        const lists = JSON.parse(formData.get('lists') || '[]');
+        const lists = JSON.parse(formData.get('lists'));
         const files = formData.getAll('files');
 
 
@@ -56,6 +57,14 @@ export async function PUT(req) {
 
         if (lists && Array.isArray(lists)) {
             game.lists = lists;
+        } else if (formData.has('lists')) {
+            console.error('Invalid lists:', lists);
+            return new Response(JSON.stringify({ message: 'Invalid lists format.' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        } else {
+            console.log('Lists field not provided, keeping existing value.');
         }
 
         if (finished) {

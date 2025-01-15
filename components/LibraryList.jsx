@@ -151,7 +151,7 @@ const LibraryList = () => {
   };
 
   if (!session) {
-    return <h2 className='text-red-600 mt-96'>Login to see your library</h2>;
+    return <h2 className='text-red-600 mt-96'>Login to see your Library</h2>;
   }
 
   if (error) {
