@@ -19,7 +19,6 @@ export async function PUT(req) {
         }
 
         const formData = await req.formData();
-        console.log('Form Data:', Array.from(formData.entries()));
         const gameId = formData.get('gameId');
         const rating = formData.get('rating');
         const note = formData.get('note');

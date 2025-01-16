@@ -6,16 +6,20 @@ import GameDetails from '@/components/GameDetails';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
 import CustomSelect from '@/components/CustomSelect';
+import FilterPanel from './FilterPanel';
 
 const LibraryList = () => {
   const { data: session, status } = useSession();
-  const [games, setGames] = useState([]);
+  const [originalGames, setOriginalGames] = useState([]);
+  const [filteredGames, setFilteredGames] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
   const [showGameDetails, setShowGameDetails] = useState(false);
   const [queryParams, setQueryParams] = useState({});
   const [sortBy, setSortBy] = useState('Title');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [finishedFilter, setFinishedFilter] = useState('');
 
   const searchParams = useSearchParams();
   const platform = searchParams.get('platform');
@@ -71,7 +75,9 @@ const LibraryList = () => {
         }
         const data = await response.json();
         const games = data.sort((a, b) => a.title.localeCompare(b.title));
-        setGames(games);
+
+        setOriginalGames(games);
+        setFilteredGames(games);
       } catch (err) {
         toast.error('Error fetching library:', err);
         setError('Failed to load library.');
@@ -96,27 +102,36 @@ const LibraryList = () => {
   ]);
 
   useEffect(() => {
-    if (games.length > 0) {
-      const sortedGames = [...games];
-      if (sortBy === 'Title') {
-        sortedGames.sort((a, b) => a.title.localeCompare(b.title));
-      } else if (sortBy === 'Release Date') {
-        sortedGames.sort(
-          (a, b) =>
-            new Date(a.release_date).getTime() -
-            new Date(b.release_date).getTime()
-        );
-      } else if (sortBy === 'Added Date') {
-        sortedGames.sort(
-          (a, b) =>
-            new Date(a.date_added).getTime() - new Date(b.date_added).getTime()
-        );
-      } else if (sortBy === 'Rating') {
-        sortedGames.sort((a, b) => a.rating - b.rating);
-      }
-      setGames(sortedGames);
+    let filtered = [...originalGames];
+
+    if (finishedFilter === 'true') {
+      filtered = filtered.filter((game) => game.finished === true);
+    } else if (finishedFilter === 'false') {
+      filtered = filtered.filter((game) => game.finished === false);
     }
-  }, [sortBy]);
+
+    if (sortBy === 'Title') {
+      filtered.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortBy === 'Release Date') {
+      filtered.sort(
+        (a, b) => new Date(a.release_date) - new Date(b.release_date)
+      );
+    } else if (sortBy === 'Added Date') {
+      filtered.sort((a, b) => new Date(a.date_added) - new Date(b.date_added));
+    } else if (sortBy === 'Rating') {
+      filtered.sort((a, b) => b.rating - a.rating);
+    }
+
+    setFilteredGames(filtered);
+  }, [finishedFilter, sortBy, originalGames]);
+
+  const toggleFilterPanel = () => {
+    setIsFilterOpen((prev) => !prev);
+  };
+
+  const handleFilterChange = (value) => {
+    setFinishedFilter(value);
+  };
 
   const handleSortChange = (value) => {
     setSortBy(value);
@@ -135,7 +150,7 @@ const LibraryList = () => {
   };
 
   const handleSave = (updatedGame) => {
-    setGames((prevGames) =>
+    setOriginalGames((prevGames) =>
       prevGames.map((game) =>
         game._id === updatedGame._id ? updatedGame : game
       )
@@ -144,7 +159,7 @@ const LibraryList = () => {
   };
 
   const handleDeleteGame = (deletedGameId) => {
-    setGames((prevGames) =>
+    setOriginalGames((prevGames) =>
       prevGames.filter((game) => game._id !== deletedGameId)
     );
     handleCloseDetails();
@@ -177,20 +192,38 @@ const LibraryList = () => {
               )
           )}
         </div>
-        {!loading && (
-          <div className='lg:mt-48 mt-20 mr-10 flex items-center justify-items-end'>
-            <div className='px-2 py-2 text-xs text-red-600 w-20'>Sort by</div>
-            <CustomSelect
-              value={sortBy}
-              onChange={handleSortChange}
-              options={['Title', 'Release Date', 'Added Date', 'Rating']}
-            />
-          </div>
-        )}
+        <div className='flex justify-center lg:mt-48 mt-20 mr-10'>
+          {!loading && (
+            <div className=' flex items-center'>
+              <div
+                className='px-2 py-2 text-xs text-red-600 w-14 cursor-pointer'
+                onClick={toggleFilterPanel}
+                onFilterChange={handleFilterChange}
+              >
+                Filters
+              </div>
+            </div>
+          )}
+          {!loading && (
+            <div className=' flex items-center'>
+              <div className='px-2 py-2 text-xs text-red-800 w-14'>Sort by</div>
+              <CustomSelect
+                value={sortBy}
+                onChange={handleSortChange}
+                options={['Title', 'Release Date', 'Added Date', 'Rating']}
+              />
+            </div>
+          )}
+        </div>
+        <FilterPanel
+          isOpen={isFilterOpen}
+          onClose={toggleFilterPanel}
+          onFilterChange={handleFilterChange}
+        />
       </div>
 
       <div className='flex flex-wrap gap-6 mb-8 justify-center lg:justify-normal '>
-        {games.map((game) => (
+        {filteredGames.map((game) => (
           <div
             key={game._id}
             className='relative group cursor-pointer'
