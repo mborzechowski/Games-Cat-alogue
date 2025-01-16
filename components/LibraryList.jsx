@@ -175,8 +175,8 @@ const LibraryList = () => {
 
   return (
     <div className='md:ml-20 lg:ml-72 xl:ml-62 2xl:ml-32 '>
-      <div className='flex justify-between'>
-        <div className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 mb-8 lg:ml-0 text-md ml-10 inline-block '>
+      <div className='flex flex-col lg:flex-row justify-between'>
+        <div className='text-red-600 lg:mt-48 lg:mb-8 lg:text-xl mt-20 lg:ml-0 text-md ml-10 inline-block '>
           Your Library
           {loading && (
             <div className='flex justify-center items-center mt-24'>
@@ -192,21 +192,19 @@ const LibraryList = () => {
               )
           )}
         </div>
-        <div className='flex justify-center lg:mt-48 mt-20 mr-10'>
+        <div className='flex flex-row lg:mt-48 ml-10 lg:ml-0 space-y-2 lg:space-y-0 lg:space-x-4 mb-4'>
           {!loading && (
-            <div className=' flex items-center'>
-              <div
-                className='px-2 py-2 text-xs text-red-600 w-14 cursor-pointer'
-                onClick={toggleFilterPanel}
-                onFilterChange={handleFilterChange}
-              >
-                Filters
-              </div>
+            <div
+              className='px-2 mt-2 lg:mt-0 text-xs text-red-600 w-14 cursor-pointer flex items-center'
+              onClick={toggleFilterPanel}
+              onFilterChange={handleFilterChange}
+            >
+              Filters
             </div>
           )}
           {!loading && (
-            <div className=' flex items-center'>
-              <div className='px-2 py-2 text-xs text-red-800 w-14'>Sort by</div>
+            <div className='flex items-center'>
+              <div className='px-2 text-xs text-red-800 w-14'>Sort by</div>
               <CustomSelect
                 value={sortBy}
                 onChange={handleSortChange}

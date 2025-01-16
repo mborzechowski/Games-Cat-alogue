@@ -11,7 +11,7 @@ export default function FilterPanel({ isOpen, onClose, onFilterChange }) {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-64 bg-black shadow-lg transform transition-transform duration-300 ease-in-out ${
+      className={`fixed top-0 right-0 h-full w-64 bg-black shadow-lg transform transition-transform duration-300 ease-in-out z-20 pt-6 lg:pt-2 ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
@@ -30,13 +30,13 @@ export default function FilterPanel({ isOpen, onClose, onFilterChange }) {
               onChange={handleFinishedChange}
               className='w-full px-2 py-1 mt-2 bg-transparent  focus:outline-none'
             >
-              <option value='' className='bg-transparent text-black'>
+              <option value='' className='text-black'>
                 All
               </option>
-              <option value='true' className='bg-transparent text-black'>
+              <option value='true' className='text-black'>
                 Finished
               </option>
-              <option value='false' className='bg-transparent text-black'>
+              <option value='false' className='text-black'>
                 Not Finished
               </option>
             </select>
