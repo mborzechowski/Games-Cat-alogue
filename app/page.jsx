@@ -1,9 +1,9 @@
-import SearchGame from '@/components/SearchGame';
+import PlayerStats from '@/components/PlayerStats';
 
 export default function Home() {
   return (
     <>
-      <SearchGame></SearchGame>
+      <PlayerStats></PlayerStats>
     </>
   );
 }

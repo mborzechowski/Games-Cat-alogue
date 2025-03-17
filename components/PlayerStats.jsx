@@ -9,12 +9,10 @@ const PlayerStats = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const genreChartRef = useRef(null);
-  const developerChartRef = useRef(null);
   const platformChartRef = useRef(null);
   const ratingChartRef = useRef(null);
 
   const genreChartInstance = useRef(null);
-  const developerChartInstance = useRef(null);
   const platformChartInstance = useRef(null);
   const ratingChartInstance = useRef(null);
 
@@ -78,7 +76,7 @@ const PlayerStats = () => {
         },
         options: {
           plugins: { legend: { display: false } },
-          cutout: '45%',
+          cutout: '55%',
         },
       });
     };
@@ -100,26 +98,6 @@ const PlayerStats = () => {
       genreChartRef,
       sortedGenres.map((item) => item[1]),
       sortedGenres.map((item) => item[0])
-    );
-
-    // Wykres kołowy dla wydawców
-    const sortedDeveloper = Object.entries(stats.developerCount)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 20);
-
-    const otherDeveloperCount = Object.entries(stats.developerCount)
-      .slice(20)
-      .reduce((acc, entry) => acc + entry[1], 0);
-
-    if (otherDeveloperCount > 0) {
-      sortedDeveloper.push(['Others', otherDeveloperCount]);
-    }
-
-    initDoughnutChart(
-      developerChartInstance,
-      developerChartRef,
-      sortedDeveloper.map((item) => item[1]),
-      sortedDeveloper.map((item) => item[0])
     );
 
     // Wykres kołowy dla platform
@@ -156,8 +134,6 @@ const PlayerStats = () => {
     // Czyszczenie wykresów przy odmontowaniu komponentu
     return () => {
       if (genreChartInstance.current) genreChartInstance.current.destroy();
-      if (developerChartInstance.current)
-        developerChartInstance.current.destroy();
       if (platformChartInstance.current)
         platformChartInstance.current.destroy();
       if (ratingChartInstance.current) ratingChartInstance.current.destroy();
@@ -184,6 +160,19 @@ const PlayerStats = () => {
     totalCount > 0 ? (physicalCount / totalCount) * 100 : 0;
   const digitalPercentage =
     totalCount > 0 ? (digitalCount / totalCount) * 100 : 0;
+
+  // Funkcja do generowania listy najwyższych wyników
+  const getTopResults = (data, count = 5) => {
+    return Object.entries(data)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, count)
+      .map(([label, value]) => ({ label, value }));
+  };
+
+  // Najczęstsze gatunki
+  const topGenres = getTopResults(stats.genresCount);
+  // Najczęstsze platformy
+  const topPlatforms = getTopResults(stats.platformsCount);
 
   return (
     <div className='bg-none text-white p-4 rounded-lg mt-4 '>
@@ -274,23 +263,46 @@ const PlayerStats = () => {
         </div>
       </div>
 
-      <div className='sm:flex sm:mt-10 h-full'>
-        {/* Wykres kołowy: Popularne gatunki */}
-        <h3 className='text-xl font-semibold mb-2'>Genres</h3>
-        <div className='mb-6 sm:max-w-[40%]'>
-          <canvas ref={genreChartRef} />
-        </div>
+      <div className='flex flex-col sm:flex-row gap-8 mt-10'>
+        {/* Sekcja z wykresami i listami */}
+        <div className='flex-1'>
+          {/* Wykres kołowy: Popularne gatunki */}
+          <h3 className='text-xl font-semibold mb-2'>Genres</h3>
+          <div className='flex gap-20'>
+            <div className='w-1/3'>
+              <canvas ref={genreChartRef} />
+            </div>
+            <div className='w-1/2 mt-8'>
+              <h4 className='text-lg font-bold mb-2'>Top Genres</h4>
+              <ul className='list-disc pl-5'>
+                {topGenres.map((genre, index) => (
+                  <li key={index} className='text-red-800'>
+                    <strong>{genre.label}</strong> | {/* Separator */}
+                    <span className='text-white'>{genre.value}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
-        {/* Wykres kołowy: Popularni wydawcy */}
-        <h3 className='text-xl font-bold mb-2'>Developer</h3>
-        <div className='mb-6 sm:max-w-[40%]'>
-          <canvas ref={developerChartRef} />
-        </div>
-
-        {/* Wykres kołowy: Popularne platformy */}
-        <h3 className='text-xl font-bold mb-2'>Platforms</h3>
-        <div className='mb-6 sm:max-w-[40%]'>
-          <canvas ref={platformChartRef} />
+          {/* Wykres kołowy: Popularne platformy */}
+          <h3 className='text-xl font-bold mt-6 mb-2'>Platforms</h3>
+          <div className='flex gap-20'>
+            <div className='w-1/3'>
+              <canvas ref={platformChartRef} />
+            </div>
+            <div className='w-1/2 mt-8'>
+              <h4 className='text-lg font-bold mb-2'>Top Platforms</h4>
+              <ul className='list-disc pl-5'>
+                {topPlatforms.map((platform, index) => (
+                  <li key={index} className='text-red-800'>
+                    <strong>{platform.label}</strong> | {/* Separator */}
+                    <span className='text-white'>{platform.value}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
